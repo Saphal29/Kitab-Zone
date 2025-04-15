@@ -1,0 +1,39 @@
+# === Java ===
+*.class
+*.jar
+*.war
+*.ear
+*.log
+
+# === Maven / Gradle ===
+target/
+build/
+.mvn/
+.gradle/
+
+# === IDEs ===
+.idea/
+*.iml
+*.ipr
+*.iws
+.vscode/
+
+# === OS-specific ===
+.DS_Store
+Thumbs.db
+
+# === Config ===
+*.env
+*.properties.local
+
+# === Tomcat / Server Configs ===
+conf/
+logs/
+temp/
+work/
+
+# === Node.js (if ever used) ===
+node_modules/
+
+# === Misc ===
+*.swp
