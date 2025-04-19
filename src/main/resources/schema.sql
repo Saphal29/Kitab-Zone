@@ -1,10 +1,14 @@
+--Create Database
+CREATE DATABASE libraryManagementSystemDb;
+USE libraryManagementSystemDb;
+
 --user table for handling users/students affair
 CREATE TABLE users (
     userId INT PRIMARY KEY AUTO_INCREMENT,
     username VARCHAR(50) UNIQUE NOT NULL,
     password VARCHAR(255) NOT NULL,
-    role ENUM('admin', 'student') NOT NULL,
-    full_name VARCHAR(100),
+    role ENUM('SUPER_ADMIN', 'ADMIN', 'STUDENT') NOT NULL,
+    fullName VARCHAR(100),
     email VARCHAR(100),
     phone VARCHAR(20),
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP

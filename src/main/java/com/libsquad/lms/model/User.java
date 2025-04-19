@@ -9,13 +9,15 @@ public class User {
  private UserRole role;
  private String fullName;
  private String email;
- private String profilePic;
+ private String profilePic;  // Stores path/URL or null
  private String phone;
  private String address;
  private LocalDateTime createdAt;
  private LocalDateTime updatedAt;
 
-//Constructor for retrieving user info from database.
+ // ------------------------ Constructors ------------------------
+
+ // Full constructor (database retrieval)
  public User(int userId, String username, String password, UserRole role,
              String fullName, String email, String profilePic,
              String phone, String address,
@@ -33,32 +35,25 @@ public class User {
   this.updatedAt = updatedAt;
  }
 
-// Constructor for registering a new user.
+ // Student self-registration (default role: STUDENT)
  public User(String username, String hashedPassword,
-             String fullName, String email,
-             String phone, String address) {
-
-  this.username=username;
-  this.password=hashedPassword;
-  this.fullName=fullName;
-  this.email=email;
-  this.phone=phone;
-  this.address=address;
+             String fullName, String email, String phone,
+             String address, String profilePic) {
+  this(-1, username, hashedPassword, UserRole.STUDENT,
+          fullName, email, profilePic, phone, address,
+          null, null);
  }
 
-//Constructor while assigning role by superadmins and admins
+ // Admin/SuperAdmin user creation (explicit role)
  public User(String username, String hashedPassword, UserRole role,
-             String fullName, String email,
-             String phone, String address) {
-  this.username=username;
-  this.password=hashedPassword;
-  this.role=role;
-  this.fullName=fullName;
-  this.email=email;
-  this.phone=phone;
-  this.address=address;
+             String fullName, String email, String phone,
+             String address, String profilePic) {
+  this(-1, username, hashedPassword, role,
+          fullName, email, profilePic, phone, address,
+          null, null);
  }
 
+//Getters/Setters
  public int getUserId() {
   return userId;
  }
@@ -147,7 +142,7 @@ public class User {
   this.updatedAt = updatedAt;
  }
 
-//Role Check Helper
+ //  Role Helpers
  public boolean isAdmin() {
   return role == UserRole.ADMIN;
  }
@@ -159,5 +154,4 @@ public class User {
  public boolean isStudent() {
   return role == UserRole.STUDENT;
  }
-
 }
