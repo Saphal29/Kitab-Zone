@@ -22,12 +22,17 @@ public class AdminAuthFilter implements Filter {
 
         User user = (session != null) ? (User) session.getAttribute("user") : null;
 
-        // Block unauthorized access
-        if (user == null || (!user.isAdmin() && !user.isSuperAdmin())) {
+        if (user == null) {
             res.sendRedirect(req.getContextPath() + "/access-denied");
             return;
         }
 
-        chain.doFilter(request, response);
+        if (user.isSuperAdmin() || user.isAdmin()) {
+            // Let request proceed for Admins/SuperAdmins
+            chain.doFilter(request, response);
+        } else {
+            // Deny access to non-admins
+            res.sendRedirect(req.getContextPath() + "/access-denied");
+        }
     }
 }
