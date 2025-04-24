@@ -184,14 +184,15 @@
       overflow-x: auto;
       gap: 1rem;
       margin-bottom: 2rem;
-      padding-bottom: 0.5rem;
+      padding-bottom: 4rem;
     }
 
     .category {
-      padding: 0.75rem 1.5rem;
+      padding: 1.3rem 1rem;
       border-radius: var(--radius);
       background: var(--card-bg);
       color: var(--text-secondary);
+      text:center;
       font-weight: 500;
       white-space: nowrap;
       cursor: pointer;
@@ -348,27 +349,27 @@
       KitabZone
   </div>
   <nav>
-      <a href="studentDashboard.html" class="nav-item">
+       <a href="${pageContext.request.contextPath}/student/studentDashboard" class="nav-item">
           <i class="fas fa-th-large"></i>
           Dashboard
       </a>
-      <a href="myBooks.html" class="nav-item">
+       <a href="${pageContext.request.contextPath}/student/myBooks" class="nav-item">
           <i class="fas fa-book"></i>
           My Books
       </a>
-      <a href="browseBooks.html" class="nav-item active">
+       <a href="${pageContext.request.contextPath}/student/browseBooks" class="nav-item active">
           <i class="fas fa-search"></i>
           Browse Books
       </a>
-      <a href="reservations.html" class="nav-item">
+       <a href="${pageContext.request.contextPath}/student/reservation" class="nav-item">
           <i class="fas fa-clock"></i>
           Reservations
       </a>
-      <a href="fines.html" class="nav-item">
+       <a href="${pageContext.request.contextPath}/student/fines" class="nav-item">
           <i class="fas fa-dollar-sign"></i>
           Fines & Payments
       </a>
-      <a href="profile.html" class="nav-item">
+       <a href="${pageContext.request.contextPath}/student/profile" class="nav-item">
           <i class="fas fa-user"></i>
           Profile
       </a>

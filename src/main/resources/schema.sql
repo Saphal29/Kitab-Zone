@@ -11,7 +11,10 @@ CREATE TABLE users (
     fullName VARCHAR(100),
     email VARCHAR(100),
     phone VARCHAR(20),
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+    address VARCHAR(255),
+    profilePic VARCHAR(255),
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
 -- Books Table

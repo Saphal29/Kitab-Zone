@@ -1,5 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
-<html lang="en">
+<html>
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -284,30 +284,31 @@
       KitabZone
   </div>
   <nav>
-      <a href="studentDashboard.html" class="nav-item">
+      <a href="${pageContext.request.contextPath}/student/studentDashboard" class="nav-item">
           <i class="fas fa-th-large"></i>
           Dashboard
       </a>
-      <a href="myBooks.html" class="nav-item active">
+      <a href="${pageContext.request.contextPath}/student/myBooks" class="nav-item active">
           <i class="fas fa-book"></i>
           My Books
       </a>
-      <a href="browseBooks.html" class="nav-item">
+      <a href="${pageContext.request.contextPath}/student/browseBooks" class="nav-item">
+
           <i class="fas fa-search"></i>
           Browse Books
       </a>
-      <a href="reservations.html" class="nav-item">
+        <a href="${pageContext.request.contextPath}/student/reservation" class="nav-item">
           <i class="fas fa-clock"></i>
           Reservations
       </a>
-      <a href="fines.html" class="nav-item">
+      <a href="${pageContext.request.contextPath}/student/fines" class="nav-item">
           <i class="fas fa-dollar-sign"></i>
           Fines & Payments
       </a>
-      <a href="profile.html" class="nav-item">
-          <i class="fas fa-user"></i>
-          Profile
-      </a>
+       <a href="${pageContext.request.contextPath}/student/profile"  class="nav-item">
+                <i class="fas fa-user"></i>
+                Profile
+            </a>
   </nav>
 </aside>
 

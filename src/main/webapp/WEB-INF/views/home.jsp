@@ -16,9 +16,7 @@
                 KitabZone
             </div>
             <div class="nav-links">
-                <a href="${pageContext.request.contextPath}/" class="nav-link">Home</a>
-                <a href="${pageContext.request.contextPath}/browse" class="nav-link">Browse</a>
-                <a href="${pageContext.request.contextPath}/contact" class="nav-link">Contact</a>
+
                 <a href="${pageContext.request.contextPath}/login" class="nav-btn">Login</a>
                 <a href="${pageContext.request.contextPath}/register" class="nav-btn primary">Get Started</a>
             </div>
@@ -33,7 +31,7 @@
                 <p class="hero-subtitle">Access millions of academic resources, rare collections, and digital archives</p>
                 <div class="cta-container">
                     <a href="${pageContext.request.contextPath}/register" class="hero-cta">Start Exploring</a>
-                    <a href="${pageContext.request.contextPath}/browse" class="hero-cta outline">View Catalog</a>
+                    <a href="${pageContext.request.contextPath}/login" class="hero-cta outline">View Catalog</a>
                 </div>
             </div>
             <div class="hero-image">
@@ -78,15 +76,15 @@
             <div class="contact-info">
                 <div class="contact-item">
                     <i class="fas fa-map-marker-alt"></i>
-                    <p>123 Knowledge Lane<br>Academic City, AC 12345</p>
+                    <p>Itahari, Sunsari</p>
                 </div>
                 <div class="contact-item">
                     <i class="fas fa-phone"></i>
-                    <p>+1 (555) 123-4567</p>
+                    <p>+977 9823467543 </p>
                 </div>
                 <div class="contact-item">
                     <i class="fas fa-envelope"></i>
-                    <p>contact@librosphere.edu</p>
+                    <p>kitabzone66@gmail.edu</p>
                 </div>
             </div>
             <div class="social-links">
@@ -100,7 +98,7 @@
     <!-- Footer -->
     <footer class="main-footer">
         <div class="footer-content">
-            <p>&copy; 2024 LibroSphere Academic Library. All rights reserved.</p>
+            <p>&copy; 2025 kitabZone Academic Library. All rights reserved.</p>
             <div class="footer-links">
                 <a href="${pageContext.request.contextPath}/privacy">Privacy Policy</a>
                 <a href="${pageContext.request.contextPath}/terms">Terms of Service</a>

@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Library App - Fine Administration</title>
+  <title>Library App - Reservation Management</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
   <style>
     /* Root Variables */
@@ -122,7 +122,7 @@
       margin-left: 0.75rem;
     }
 
-    /* Fine Administration */
+    /* Reservation Management */
     .card {
       background: var(--card-bg);
       border-radius: var(--radius);
@@ -188,8 +188,11 @@
         <a href="${pageContext.request.contextPath}/admin/member" class="nav-item"><i class="fas fa-users"></i> Member</a>
         <a href="${pageContext.request.contextPath}/admin/addBook" class="nav-item"><i class="fas fa-book"></i> Add Books</a>
         <a href="${pageContext.request.contextPath}/admin/transactionControl" class="nav-item"><i class="fas fa-tasks"></i> Transaction Control</a>
-        <a href="${pageContext.request.contextPath}/admin/reservationManagement" class="nav-item"><i class="fas fa-calendar-check"></i> Reservation Management</a>
-        <a href="${pageContext.request.contextPath}/admin/fineManagement" class="nav-item active"><i class="fas fa-hand-holding-usd"></i> Fine Administration</a>
+        <a href="${pageContext.request.contextPath}/admin/reservationManagement" class="nav-item active"><i class="fas fa-calendar-check"></i> Reservation Management</a>
+        <a href="${pageContext.request.contextPath}/admin/fineManagement" class="nav-item"><i class="fas fa-hand-holding-usd"></i> Fine Administration</a>
+
+
+
       </nav>
     </aside>
 
@@ -198,54 +201,45 @@
       <div class="header">
         <div class="global-search">
           <i class="fas fa-search"></i>
-          <input type="text" placeholder="Search Fines" />
+          <input type="text" placeholder="Search Reservations" />
         </div>
       </div>
 
       <!-- Cards Section -->
       <div class="card">
-        <i class="fas fa-coins"></i>
+        <i class="fas fa-hourglass-half"></i>
         <div class="card-content">
-          <h2 class="card-title">Set Fine Rates</h2>
-          <p class="card-subtitle">Adjust fine rates per day for overdue books.</p>
+          <h2 class="card-title">View Pending Requests</h2>
+          <p class="card-subtitle">Check and manage all reservation requests.</p>
+        </div>
+        <button class="card-action">View</button>
+      </div>
+
+      <div class="card">
+        <i class="fas fa-check-circle"></i>
+        <div class="card-content">
+          <h2 class="card-title">Approve/Deny Reservations</h2>
+          <p class="card-subtitle">Decide and process reservation approvals.</p>
+        </div>
+        <button class="card-action">Manage</button>
+      </div>
+
+      <div class="card">
+        <i class="fas fa-clock"></i>
+        <div class="card-content">
+          <h2 class="card-title">Set Expiry Periods</h2>
+          <p class="card-subtitle">Define how long reservations remain valid.</p>
         </div>
         <button class="card-action">Set</button>
       </div>
 
       <div class="card">
-        <i class="fas fa-calculator"></i>
+        <i class="fas fa-bell"></i>
         <div class="card-content">
-          <h2 class="card-title">Calculate Fines</h2>
-          <p class="card-subtitle">Automatically calculate overdue fines.</p>
+          <h2 class="card-title">Notify Students</h2>
+          <p class="card-subtitle">Send alerts for available reservations.</p>
         </div>
-        <button class="card-action">Calculate</button>
-      </div>
-
-      <div class="card">
-        <i class="fas fa-check"></i>
-        <div class="card-content">
-          <h2 class="card-title">Mark as Paid/Unpaid</h2>
-          <p class="card-subtitle">Update fine payment statuses.</p>
-        </div>
-        <button class="card-action">Update</button>
-      </div>
-
-      <div class="card">
-        <i class="fas fa-clipboard-check"></i>
-        <div class="card-content">
-          <h2 class="card-title">Generate Waiver Requests</h2>
-          <p class="card-subtitle">Create and process fine waivers.</p>
-        </div>
-        <button class="card-action">Generate</button>
-      </div>
-
-      <div class="card">
-        <i class="fas fa-chart-bar"></i>
-        <div class="card-content">
-          <h2 class="card-title">Track Payment History</h2>
-          <p class="card-subtitle">View and analyze fine payment records.</p>
-        </div>
-        <button class="card-action">View</button>
+        <button class="card-action">Notify</button>
       </div>
     </main>
   </div>
