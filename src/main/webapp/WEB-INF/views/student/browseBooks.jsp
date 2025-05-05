@@ -1,4 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -8,6 +10,7 @@
   <style>
     :root {
       --primary: #4CAF50;
+      --primary-dark: #3e8e41;
       --background: #F8F9FA;
       --card-bg: #FFFFFF;
       --text-primary: #2D3436;
@@ -16,6 +19,9 @@
       --hover-bg: #F1F4F6;
       --shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
       --radius: 8px;
+      --error: #DC3545;
+      --warning: #FFC107;
+      --info: #17A2B8;
     }
 
     * {
@@ -28,6 +34,7 @@
     body {
       background: var(--background);
       display: flex;
+      min-height: 100vh;
     }
 
     a {
@@ -184,24 +191,30 @@
       overflow-x: auto;
       gap: 1rem;
       margin-bottom: 2rem;
-      padding-bottom: 4rem;
+      padding-bottom: 0.5rem;
     }
 
     .category {
-      padding: 1.3rem 1rem;
+      padding: 1rem 1.5rem;
       border-radius: var(--radius);
       background: var(--card-bg);
       color: var(--text-secondary);
-      text:center;
+      text-align: center;
       font-weight: 500;
       white-space: nowrap;
       cursor: pointer;
-      transition: background 0.2s;
+      transition: all 0.2s;
+      border: 1px solid var(--border-color);
     }
 
     .category.active {
       background: var(--primary);
       color: white;
+      border-color: var(--primary);
+    }
+
+    .category:hover:not(.active) {
+      background: var(--hover-bg);
     }
 
     /* Books Grid */
@@ -249,8 +262,16 @@
       color: var(--primary);
     }
 
-    .status-borrowed {
-      color: #DC3545;
+    .status-reserved {
+      color: var(--warning);
+    }
+
+    .status-issued {
+      color: var(--error);
+    }
+
+    .status-maintenance {
+      color: var(--info);
     }
 
     .book-info {
@@ -261,12 +282,20 @@
       font-weight: 600;
       color: var(--text-primary);
       margin-bottom: 0.5rem;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
     }
 
     .book-author {
       color: var(--text-secondary);
       font-size: 0.875rem;
       margin-bottom: 1rem;
+      display: -webkit-box;
+      -webkit-line-clamp: 1;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
     }
 
     .book-meta {
@@ -311,70 +340,127 @@
       justify-content: center;
     }
 
+    .btn-primary:hover {
+      background: var(--primary-dark);
+    }
+
+    .btn-primary:disabled {
+      background: #cccccc;
+      cursor: not-allowed;
+    }
+
     .btn-outline {
       background: transparent;
       border: 1px solid var(--border-color);
       color: var(--text-secondary);
     }
 
-    .pagination {
-      display: flex;
-      justify-content: center;
-      gap: 0.5rem;
-      margin-top: 2rem;
+    .btn-outline:hover {
+      background: var(--hover-bg);
     }
 
-    .page-btn {
-      padding: 0.5rem 1rem;
-      background: var(--card-bg);
-      border: 1px solid var(--border-color);
+    /* Messages */
+    .message {
+      padding: 1rem;
       border-radius: var(--radius);
-      cursor: pointer;
+      margin-bottom: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
     }
 
-    .page-btn.active {
-      background: var(--primary);
-      color: white;
-      border-color: var(--primary);
+    .message-success {
+      background: #d4edda;
+      color: #155724;
+      border: 1px solid #c3e6cb;
+    }
+
+    .message-error {
+      background: #f8d7da;
+      color: #721c24;
+      border: 1px solid #f5c6cb;
+    }
+
+    .empty-state {
+      grid-column: 1 / -1;
+      text-align: center;
+      padding: 3rem;
+      color: var(--text-secondary);
+    }
+
+    .empty-state i {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+      color: var(--border-color);
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .app-container {
+        flex-direction: column;
+      }
+
+      .sidebar {
+        width: 100%;
+        height: auto;
+      }
+
+      .main-content {
+        padding: 1.5rem;
+      }
+
+      .search-filter-row {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .filter-pills {
+        justify-content: center;
+      }
+
+      .books-grid {
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        gap: 1.5rem;
+      }
     }
   </style>
 </head>
 <body>
   <div class="app-container">
-
-    <!-- This sidebar structure should be the same in all files -->
-<aside class="sidebar">
-  <div class="app-logo">
-      <i class="fas fa-book"></i>
-      KitabZone
-  </div>
-  <nav>
-       <a href="${pageContext.request.contextPath}/student/studentDashboard" class="nav-item">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="app-logo">
+        <i class="fas fa-book"></i>
+        KitabZone
+      </div>
+      <nav>
+        <a href="${pageContext.request.contextPath}/student/studentDashboard" class="nav-item">
           <i class="fas fa-th-large"></i>
           Dashboard
-      </a>
-       <a href="${pageContext.request.contextPath}/student/myBooks" class="nav-item">
+        </a>
+        <a href="${pageContext.request.contextPath}/student/myBooks" class="nav-item">
           <i class="fas fa-book"></i>
           My Books
-      </a>
-       <a href="${pageContext.request.contextPath}/student/browseBooks" class="nav-item active">
+        </a>
+        <a href="${pageContext.request.contextPath}/student/browseBooks" class="nav-item active">
           <i class="fas fa-search"></i>
           Browse Books
-      </a>
-       <a href="${pageContext.request.contextPath}/student/reservation" class="nav-item">
+        </a>
+        <a href="${pageContext.request.contextPath}/student/reservation" class="nav-item">
           <i class="fas fa-clock"></i>
           Reservations
-      </a>
-       <a href="${pageContext.request.contextPath}/student/fines" class="nav-item">
+        </a>
+        <a href="${pageContext.request.contextPath}/student/fines" class="nav-item">
           <i class="fas fa-dollar-sign"></i>
           Fines & Payments
-      </a>
-       <a href="${pageContext.request.contextPath}/student/profile" class="nav-item">
+        </a>
+        <a href="${pageContext.request.contextPath}/student/profile" class="nav-item">
           <i class="fas fa-user"></i>
           Profile
-      </a>
-  </nav>
-</aside>
+        </a>
+      </nav>
+    </aside>
+
     <!-- Main Content -->
     <main class="main-content">
       <div class="header">
@@ -393,10 +479,23 @@
             <div class="filter-pill"><i class="fas fa-book"></i> Available Now</div>
             <div class="filter-pill"><i class="fas fa-star"></i> Most Popular</div>
             <div class="filter-pill"><i class="fas fa-clock"></i> Recently Added</div>
-            <div class="filter-pill"><i class="fas fa-filter"></i> Filters</div>
           </div>
         </div>
       </div>
+
+      <!-- Messages -->
+      <c:if test="${not empty success}">
+        <div class="message message-success">
+          <i class="fas fa-check-circle"></i>
+          ${success}
+        </div>
+      </c:if>
+      <c:if test="${not empty error}">
+        <div class="message message-error">
+          <i class="fas fa-exclamation-circle"></i>
+          ${error}
+        </div>
+      </c:if>
 
       <div class="categories">
         <div class="category active">All Books</div>
@@ -407,43 +506,57 @@
         <div class="category">Business</div>
         <div class="category">Arts</div>
         <div class="category">History</div>
-        <div class="category">Philosophy</div>
       </div>
 
       <div class="books-grid">
-        <!-- Book Card -->
-        <div class="book-card">
-          <div class="book-cover">
-            <img src="https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c" alt="Book Cover">
-            <div class="book-status status-available">Available</div>
-          </div>
-          <div class="book-info">
-            <h3 class="book-title">The Design of Everyday Things</h3>
-            <p class="book-author">Don Norman</p>
-            <div class="book-meta">
-              <div class="book-rating">
-                <i class="fas fa-star star-filled"></i>
-                <span>4.5 (128 reviews)</span>
+        <c:choose>
+          <c:when test="${empty books}">
+            <div class="empty-state">
+              <i class="fas fa-book-open"></i>
+              <h3>No Books Found</h3>
+              <p>There are currently no books available in the library.</p>
+            </div>
+          </c:when>
+          <c:otherwise>
+            <c:forEach items="${books}" var="book">
+              <div class="book-card">
+                <div class="book-cover">
+                  <c:choose>
+                    <c:when test="${not empty book.coverImage}">
+                      <img src="${book.coverImage}" alt="${book.title}">
+                    </c:when>
+                    <c:otherwise>
+                      <img src="https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c" alt="Default Book Cover">
+                    </c:otherwise>
+                  </c:choose>
+                  <div class="book-status status-${book.status.name().toLowerCase()}">
+                    ${book.status}
+                  </div>
+                </div>
+                <div class="book-info">
+                  <h3 class="book-title">${book.title}</h3>
+                  <p class="book-author">${book.author}</p>
+                  <div class="book-meta">
+                    <span>ISBN: ${book.isbn}</span>
+                    <span>Copies: ${book.totalCopies}</span>
+                  </div>
+                  <div class="book-actions">
+                    <form action="${pageContext.request.contextPath}/student/borrowBook" method="post">
+                      <input type="hidden" name="bookId" value="${book.bookId}">
+                      <button type="submit" class="btn btn-primary"
+                        ${book.status != 'AVAILABLE' || book.totalCopies <= 0 ? 'disabled' : ''}>
+                        <i class="fas fa-book"></i> Borrow Now
+                      </button>
+                    </form>
+                    <button class="btn btn-outline">
+                      <i class="fas fa-bookmark"></i>
+                    </button>
+                  </div>
+                </div>
               </div>
-              <span>368 pages</span>
-            </div>
-            <div class="book-actions">
-              <button class="btn btn-primary"><i class="fas fa-book"></i> Borrow Now</button>
-              <button class="btn btn-outline"><i class="fas fa-bookmark"></i></button>
-            </div>
-          </div>
-        </div>
-        <!-- Add more book cards -->
-      </div>
-
-      <div class="pagination">
-        <button class="page-btn"><i class="fas fa-chevron-left"></i></button>
-        <button class="page-btn active">1</button>
-        <button class="page-btn">2</button>
-        <button class="page-btn">3</button>
-        <button class="page-btn">...</button>
-        <button class="page-btn">12</button>
-        <button class="page-btn"><i class="fas fa-chevron-right"></i></button>
+            </c:forEach>
+          </c:otherwise>
+        </c:choose>
       </div>
     </main>
   </div>

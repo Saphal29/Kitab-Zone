@@ -1,105 +1,57 @@
 package com.libsquad.lms.model;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 public class Transaction {
     private int transactionId;
     private int userId;
     private int bookId;
-    private LocalDate issueDate;
-    private LocalDate dueDate;
-    private LocalDate returnDate;
-    private TransactionStatus status;
+    private LocalDateTime checkoutDate;
+    private LocalDateTime dueDate;
+    private LocalDateTime returnDate;
+    private Status status;
+    private int renewCount;
 
-    // Enums for transaction status
-    public enum TransactionStatus {
-        ISSUED, RETURNED
+    // Additional fields for display
+    private String bookTitle;
+    private String bookAuthor;
+    private String bookCoverImage;
+
+    public enum Status {
+        ACTIVE, RETURNED, OVERDUE
     }
 
-    // Constructor for issuing a book
-    public Transaction(int userId, int bookId, LocalDate issueDate,
-                       LocalDate dueDate) {
-        this.userId = userId;
-        this.bookId = bookId;
-        this.issueDate = issueDate;
-        this.dueDate = dueDate;
-        this.status = TransactionStatus.ISSUED; // Default status
-    }
+    // Getters and setters
+    public int getTransactionId() { return transactionId; }
+    public void setTransactionId(int transactionId) { this.transactionId = transactionId; }
 
-    // Full constructor (for database retrieval)
-    public Transaction(int transactionId, int userId, int bookId,
-                       LocalDate issueDate, LocalDate dueDate,
-                       LocalDate returnDate, TransactionStatus status) {
-        this.transactionId = transactionId;
-        this.userId = userId;
-        this.bookId = bookId;
-        this.issueDate = issueDate;
-        this.dueDate = dueDate;
-        this.returnDate = returnDate;
-        this.status = status;
-    }
+    public int getUserId() { return userId; }
+    public void setUserId(int userId) { this.userId = userId; }
 
-    // Getters/Setters
+    public int getBookId() { return bookId; }
+    public void setBookId(int bookId) { this.bookId = bookId; }
 
+    public LocalDateTime getCheckoutDate() { return checkoutDate; }
+    public void setCheckoutDate(LocalDateTime checkoutDate) { this.checkoutDate = checkoutDate; }
 
-    public int getTransactionId() {
-        return transactionId;
-    }
+    public LocalDateTime getDueDate() { return dueDate; }
+    public void setDueDate(LocalDateTime dueDate) { this.dueDate = dueDate; }
 
-    public void setTransactionId(int transactionId) {
-        this.transactionId = transactionId;
-    }
+    public LocalDateTime getReturnDate() { return returnDate; }
+    public void setReturnDate(LocalDateTime returnDate) { this.returnDate = returnDate; }
 
-    public int getUserId() {
-        return userId;
-    }
+    public Status getStatus() { return status; }
+    public void setStatus(Status status) { this.status = status; }
 
-    public void setUserId(int userId) {
-        this.userId = userId;
-    }
+    public int getRenewCount() { return renewCount; }
+    public void setRenewCount(int renewCount) { this.renewCount = renewCount; }
 
-    public int getBookId() {
-        return bookId;
-    }
+    public String getBookTitle() { return bookTitle; }
+    public void setBookTitle(String bookTitle) { this.bookTitle = bookTitle; }
 
-    public void setBookId(int bookId) {
-        this.bookId = bookId;
-    }
+    public String getBookAuthor() { return bookAuthor; }
+    public void setBookAuthor(String bookAuthor) { this.bookAuthor = bookAuthor; }
 
-    public LocalDate getIssueDate() {
-        return issueDate;
-    }
-
-    public void setIssueDate(LocalDate issueDate) {
-        this.issueDate = issueDate;
-    }
-
-    public LocalDate getDueDate() {
-        return dueDate;
-    }
-
-    public void setDueDate(LocalDate dueDate) {
-        this.dueDate = dueDate;
-    }
-
-    public LocalDate getReturnDate() {
-        return returnDate;
-    }
-
-    public void setReturnDate(LocalDate returnDate) {
-        this.returnDate = returnDate;
-    }
-
-    public TransactionStatus getStatus() {
-        return status;
-    }
-
-    public void setStatus(TransactionStatus status) {
-        this.status = status;
-    }
-
-    // Helper to check if transaction is overdue
-    public boolean isOverdue() {
-        return LocalDate.now().isAfter(dueDate) && status != TransactionStatus.RETURNED;
-    }
+    public String getBookCoverImage() { return bookCoverImage; }
+    public void setBookCoverImage(String bookCoverImage) { this.bookCoverImage = bookCoverImage; }
 }

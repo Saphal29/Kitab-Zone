@@ -8,76 +8,87 @@
     <!-- Include Chart.js for graphs -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
-        :root {
-            --primary: #4CAF50;
-            --danger: #FF5252;
-            --warning: #FFC107;
-            --success: #66BB6A;
-            --background: #F8F9FA;
-            --card-bg: #FFFFFF;
-            --text-primary: #2D3436;
-            --text-secondary: #636E72;
-            --border-color: #E9ECEF;
-            --hover-bg: #F1F4F6;
-            --shadow: 0 2px 4px rgba(0,0,0,0.05);
-            --radius: 12px;
-        }
+       :root {
+         --primary: #4CAF50;
+         --background: #F8F9FA;
+         --card-bg: #FFFFFF;
+         --text-primary: #2D3436;
+         --text-secondary: #636E72;
+         --border-color: #E9ECEF;
+         --hover-bg: #F1F4F6;
+         --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+         --radius: 12px;
+         --transition-speed: 0.3s;
+       }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-        }
 
-        body {
-            background: var(--background);
-            color: var(--text-primary);
-        }
+       * {
+         margin: 0;
+         padding: 0;
+         box-sizing: border-box;
+         font-family: 'Segoe UI', Roboto, sans-serif;
+       }
 
-        .app-container {
-            display: grid;
-            grid-template-columns: 250px 1fr;
-            min-height: 100vh;
-        }
+       body {
+         background: var(--background);
+         color: var(--text-primary);
+       }
 
-        /* Sidebar */
-        .sidebar {
-            background: var(--card-bg);
-            padding: 2rem;
-            border-right: 1px solid var(--border-color);
-        }
+       a {
+         text-decoration: none;
+         color: inherit;
+       }
 
-        .app-logo {
-      display: flex;
-      align-items: center;
-      font-size: 1.5rem;
-      font-weight: 600;
-      gap: 0.5rem;
-      margin-bottom: 2rem;
-      color: var(--text-primary);
-    }
+       .app-container {
+         display: flex;
+         height: 100vh;
+         overflow: hidden;
+       }
 
-        .nav-item {
-            display: flex;
-            align-items: center;
-            padding: 0.875rem 1rem;
-            color: var(--text-secondary);
-            text-decoration: none;
-            border-radius: 8px;
-            margin-bottom: 0.5rem;
-            transition: all 0.2s ease;
-        }
+       /* Sidebar */
+       .sidebar {
+         background: var(--card-bg);
+         border-right: 1px solid var(--border-color);
+         width: 250px;
+         padding: 2rem 1.5rem;
+         display: flex;
+         flex-direction: column;
+       }
 
-        .nav-item.active {
-            background: var(--primary);
-            color: white;
-        }
+       .app-logo {
+         display: flex;
+         align-items: center;
+         font-size: 1.5rem;
+         font-weight: 600;
+         gap: 0.5rem;
+         margin-bottom: 2rem;
+         color: var(--text-primary);
+       }
 
-        .nav-item i {
-            margin-right: 12px;
-            width: 20px;
-        }
+       .nav-item {
+         display: flex;
+         align-items: center;
+         gap: 0.75rem;
+         padding: 0.75rem 1rem;
+         font-size: 1rem;
+         border-radius: var(--radius);
+         transition: background var(--transition-speed);
+         margin-bottom: 0.5rem;
+       }
+
+       .nav-item i {
+         font-size: 1.25rem;
+       }
+
+       .nav-item:hover {
+         background: var(--hover-bg);
+       }
+
+       .nav-item.active {
+         background: var(--primary);
+         color: #fff;
+       }
+
 
         /* Main Content */
         .main-content {
@@ -254,25 +265,23 @@
 </head>
 <body>
     <div class="app-container">
-        <!-- Sidebar -->
         <aside class="sidebar">
-            <div class="app-logo">
-                <i class="fas fa-book"></i>
-                KitabZone
-            </div>
-            <nav>
-                <a href="${pageContext.request.contextPath}/admin/adminDashboard" class="nav-item active"><i class="fas fa-th-large"></i> Dashboard</a>
-                <a href="${pageContext.request.contextPath}/admin/member" class="nav-item"><i class="fas fa-users"></i> Member</a>
-                <a href="${pageContext.request.contextPath}/admin/addBook" class="nav-item"><i class="fas fa-book"></i> Add Books</a>
-               <a href="${pageContext.request.contextPath}/admin/transactionControl" class="nav-item"><i class="fas fa-tasks"></i> Transaction Control</a>
-                <a href="${pageContext.request.contextPath}/admin/reservationManagement" class="nav-item"><i class="fas fa-calendar-check"></i> Reservation Management</a>
-                <a href="${pageContext.request.contextPath}/admin/fineManagement" class="nav-item"><i class="fas fa-hand-holding-usd"></i> Fine Administration</a>
+          <div class="app-logo">
+            <i class="fas fa-book"></i> KitabZone
+          </div>
+          <nav>
+            <a href="${pageContext.request.contextPath}/admin/adminDashboard" class="nav-item active"><i class="fas fa-th-large"></i> Dashboard</a>
+            <a href="${pageContext.request.contextPath}/admin/member" class="nav-item"><i class="fas fa-users"></i> Member</a>
+            <a href="${pageContext.request.contextPath}/admin/addBook" class="nav-item"><i class="fas fa-book"></i> Add Books</a>
+            <a href="${pageContext.request.contextPath}/admin/transactionControl" class="nav-item "><i class="fas fa-tasks"></i> Transaction Control</a>
+            <a href="${pageContext.request.contextPath}/admin/reservationManagement" class="nav-item"><i class="fas fa-calendar-check"></i> Reservation Management</a>
+            <a  href="${pageContext.request.contextPath}/admin/fineManagement" class="nav-item"><i class="fas fa-hand-holding-usd"></i> Fine Administration</a>
 
 
 
-              </nav>
+
+          </nav>
         </aside>
-
         <!-- Main Content -->
         <main class="main-content">
             <!-- Header -->
