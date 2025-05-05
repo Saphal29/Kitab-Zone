@@ -38,7 +38,7 @@ public class LoginServlet extends HttpServlet {
 
                 //creating Cookie to remember the user
                 Cookie cookie = new Cookie("user", user.getUsername());
-                cookie.setMaxAge(60*5);
+                cookie.setMaxAge(60*50);
                 cookie.setPath("/");
                 response.addCookie(cookie);
 

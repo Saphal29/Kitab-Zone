@@ -1,5 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
-<html>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -7,62 +9,73 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
   <style>
     :root {
-      --primary: #4caf50;
-      --background: #f8f9fa;
-      --card-bg: #ffffff;
-      --text-primary: #2d3436;
-      --text-secondary: #636e72;
-      --border-color: #e9ecef;
-      --hover-bg: #f1f4f6;
+      --primary: #4CAF50;
+      --primary-dark: #3e8e41;
+      --background: #F8F9FA;
+      --card-bg: #FFFFFF;
+      --text-primary: #2D3436;
+      --text-secondary: #636E72;
+      --border-color: #E9ECEF;
+      --hover-bg: #F1F4F6;
       --shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
       --radius: 8px;
+      --error: #DC3545;
+      --warning: #FFC107;
     }
 
     * {
       margin: 0;
       padding: 0;
       box-sizing: border-box;
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      font-family: 'Segoe UI', Roboto, sans-serif;
     }
 
     body {
       background: var(--background);
+      display: flex;
+      min-height: 100vh;
+    }
+
+    a {
+      text-decoration: none;
+      color: inherit;
     }
 
     .app-container {
       display: flex;
-      min-height: 100vh;
-      flex-direction: row;
+      width: 100%;
+      height: 100vh;
     }
 
     /* Sidebar */
     .sidebar {
+      width: 250px;
       background: var(--card-bg);
       padding: 1.5rem;
       border-right: 1px solid var(--border-color);
-      width: 250px;
-      flex-shrink: 0;
+      display: flex;
+      flex-direction: column;
     }
 
     .app-logo {
       display: flex;
       align-items: center;
-      gap: 0.75rem;
-      font-size: 1.25rem;
+      font-size: 1.5rem;
       font-weight: 600;
-      margin-bottom: 2rem;
       color: var(--text-primary);
+      gap: 0.5rem;
+      margin-bottom: 2rem;
     }
 
     .nav-item {
       display: flex;
       align-items: center;
       padding: 0.75rem 1rem;
-      color: var(--text-secondary);
-      text-decoration: none;
       border-radius: var(--radius);
+      font-size: 1rem;
+      gap: 0.75rem;
       margin-bottom: 0.5rem;
-      transition: all 0.2s;
+      transition: background 0.2s;
     }
 
     .nav-item:hover {
@@ -71,18 +84,16 @@
 
     .nav-item.active {
       background: var(--primary);
-      color: white;
-    }
-
-    .nav-item i {
-      margin-right: 12px;
-      width: 20px;
+      color: #fff;
     }
 
     /* Main Content */
     .main-content {
-      flex-grow: 1;
+      flex: 1;
       padding: 2rem;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
     }
 
     .header {
@@ -90,11 +101,10 @@
       justify-content: space-between;
       align-items: center;
       margin-bottom: 2rem;
-      padding: 1rem 0;
     }
 
     .page-title {
-      font-size: 1.5rem;
+      font-size: 1.75rem;
       font-weight: 600;
       color: var(--text-primary);
     }
@@ -116,6 +126,7 @@
       font-weight: 500;
       color: var(--text-secondary);
       transition: all 0.2s;
+      border: 1px solid transparent;
     }
 
     .tab.active {
@@ -125,6 +136,7 @@
 
     .tab:hover:not(.active) {
       background: var(--hover-bg);
+      border-color: var(--border-color);
     }
 
     /* Books Grid */
@@ -161,11 +173,12 @@
       position: absolute;
       top: 1rem;
       right: 1rem;
-      background: rgba(255, 82, 82, 0.9);
+      background: rgba(220, 53, 69, 0.9);
       color: white;
       padding: 0.25rem 0.75rem;
       border-radius: 1rem;
       font-size: 0.75rem;
+      font-weight: 500;
     }
 
     .book-info {
@@ -176,12 +189,20 @@
       font-weight: 600;
       margin-bottom: 0.5rem;
       color: var(--text-primary);
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
     }
 
     .book-author {
       color: var(--text-secondary);
       font-size: 0.875rem;
       margin-bottom: 1rem;
+      display: -webkit-box;
+      -webkit-line-clamp: 1;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
     }
 
     .progress-bar {
@@ -204,19 +225,18 @@
       justify-content: space-between;
       font-size: 0.875rem;
       color: var(--text-secondary);
+      margin-bottom: 0.5rem;
     }
 
     .book-actions {
       display: flex;
-      gap: 1rem;
+      gap: 0.5rem;
       margin-top: 1rem;
-      flex-wrap: wrap;
     }
 
     .btn {
-      padding: 0.5rem 1rem;
+      padding: 0.75rem 1rem;
       border-radius: var(--radius);
-      border: none;
       font-size: 0.875rem;
       cursor: pointer;
       transition: all 0.2s;
@@ -228,16 +248,57 @@
     .btn-primary {
       background: var(--primary);
       color: white;
+      border: none;
+      flex: 1;
+    }
+
+    .btn-primary:hover {
+      background: var(--primary-dark);
     }
 
     .btn-outline {
-      border: 1px solid var(--border-color);
       background: transparent;
+      border: 1px solid var(--border-color);
       color: var(--text-secondary);
     }
 
-    .btn:hover {
-      opacity: 0.9;
+    .btn-outline:hover {
+      background: var(--hover-bg);
+    }
+
+    /* Messages */
+    .message {
+      padding: 1rem;
+      border-radius: var(--radius);
+      margin-bottom: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .message-success {
+      background: #d4edda;
+      color: #155724;
+      border: 1px solid #c3e6cb;
+    }
+
+    .message-error {
+      background: #f8d7da;
+      color: #721c24;
+      border: 1px solid #f5c6cb;
+    }
+
+    /* Empty State */
+    .empty-state {
+      text-align: center;
+      padding: 3rem;
+      color: var(--text-secondary);
+    }
+
+    .empty-state i {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+      color: var(--border-color);
     }
 
     /* Responsive */
@@ -248,169 +309,142 @@
 
       .sidebar {
         width: 100%;
-        border-right: none;
-        border-bottom: 1px solid var(--border-color);
-        position: static;
-        display: flex;
-        flex-wrap: wrap;
-        gap: 1rem;
-        justify-content: space-around;
+        height: auto;
       }
 
       .main-content {
-        margin-left: 0;
-        padding: 1rem;
+        padding: 1.5rem;
       }
 
       .tabs {
-        flex-direction: column;
-        gap: 0.5rem;
+        justify-content: center;
       }
 
-      .book-meta {
+      .books-grid {
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        gap: 1.5rem;
+      }
+
+      .book-actions {
         flex-direction: column;
-        align-items: flex-start;
-        gap: 0.5rem;
       }
     }
   </style>
 </head>
 <body>
   <div class="app-container">
-   <!-- This sidebar structure should be the same in all files -->
-<aside class="sidebar">
-  <div class="app-logo">
-      <i class="fas fa-book"></i>
-      KitabZone
-  </div>
-  <nav>
-      <a href="${pageContext.request.contextPath}/student/studentDashboard" class="nav-item">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="app-logo">
+        <i class="fas fa-book"></i>
+        KitabZone
+      </div>
+      <nav>
+        <a href="${pageContext.request.contextPath}/student/studentDashboard" class="nav-item">
           <i class="fas fa-th-large"></i>
           Dashboard
-      </a>
-      <a href="${pageContext.request.contextPath}/student/myBooks" class="nav-item active">
+        </a>
+        <a href="${pageContext.request.contextPath}/student/myBooks" class="nav-item active">
           <i class="fas fa-book"></i>
           My Books
-      </a>
-      <a href="${pageContext.request.contextPath}/student/browseBooks" class="nav-item">
-
+        </a>
+        <a href="${pageContext.request.contextPath}/student/browseBooks" class="nav-item">
           <i class="fas fa-search"></i>
           Browse Books
-      </a>
+        </a>
         <a href="${pageContext.request.contextPath}/student/reservation" class="nav-item">
           <i class="fas fa-clock"></i>
           Reservations
-      </a>
-      <a href="${pageContext.request.contextPath}/student/fines" class="nav-item">
+        </a>
+        <a href="${pageContext.request.contextPath}/student/fines" class="nav-item">
           <i class="fas fa-dollar-sign"></i>
           Fines & Payments
-      </a>
-       <a href="${pageContext.request.contextPath}/student/profile"  class="nav-item">
-                <i class="fas fa-user"></i>
-                Profile
-            </a>
-  </nav>
-</aside>
+        </a>
+        <a href="${pageContext.request.contextPath}/student/profile" class="nav-item">
+          <i class="fas fa-user"></i>
+          Profile
+        </a>
+      </nav>
+    </aside>
 
+    <!-- Main Content -->
     <main class="main-content">
       <div class="header">
         <h1 class="page-title">My Books</h1>
       </div>
 
+      <!-- Messages -->
+      <c:if test="${not empty success}">
+        <div class="message message-success">
+          <i class="fas fa-check-circle"></i>
+          ${success}
+        </div>
+      </c:if>
+      <c:if test="${not empty error}">
+        <div class="message message-error">
+          <i class="fas fa-exclamation-circle"></i>
+          ${error}
+        </div>
+      </c:if>
+
       <div class="tabs">
-        <div class="tab active">Currently Borrowed (3)</div>
+        <div class="tab active">Currently Borrowed (${not empty transactions ? transactions.size() : 0})</div>
         <div class="tab">Reading History</div>
         <div class="tab">Saved Books</div>
       </div>
-        <!-- Books Grid -->
-        <div class="books-grid">
-          <!-- Book 1 -->
-          <div class="book-card">
-              <div class="book-cover">
-                  <img src="https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c" alt="Book Cover">
-                  <div class="due-badge">Due in 3 days</div>
-              </div>
-              <div class="book-info">
-                  <h3 class="book-title">The Design of Everyday Things</h3>
-                  <p class="book-author">Don Norman</p>
+
+      <div class="books-grid">
+        <c:choose>
+          <c:when test="${empty transactions}">
+            <div class="empty-state">
+              <i class="fas fa-book-open"></i>
+              <h3>No Books Borrowed</h3>
+              <p>You haven't borrowed any books yet. Browse our collection to find something interesting!</p>
+            </div>
+          </c:when>
+          <c:otherwise>
+            <c:forEach items="${transactions}" var="transaction">
+              <div class="book-card">
+                <div class="book-cover">
+                  <c:choose>
+                    <c:when test="${not empty transaction.bookCoverImage}">
+                      <img src="${transaction.bookCoverImage}" alt="${transaction.bookTitle}">
+                    </c:when>
+                    <c:otherwise>
+                      <img src="https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c" alt="Default Book Cover">
+                    </c:otherwise>
+                  </c:choose>
+                  <div class="due-badge">
+                    Due <fmt:formatDate value="${transaction.dueDate}" pattern="MMM dd"/>
+                  </div>
+                </div>
+                <div class="book-info">
+                  <h3 class="book-title">${transaction.bookTitle}</h3>
+                  <p class="book-author">${transaction.bookAuthor}</p>
                   <div class="progress-bar">
-                      <div class="progress" style="width: 75%"></div>
+                    <div class="progress" style="width: 30%"></div>
                   </div>
                   <div class="book-meta">
-                      <span>75% completed</span>
-                      <span>Page 180 of 240</span>
+                    <span>Borrowed: <fmt:formatDate value="${transaction.checkoutDate}" pattern="MMM dd, yyyy"/></span>
                   </div>
                   <div class="book-actions">
-                      <button class="btn btn-primary">
-                          <i class="fas fa-book-reader"></i>
-                          Continue Reading
+                    <button class="btn btn-primary">
+                      <i class="fas fa-book-reader"></i>
+                      Continue Reading
+                    </button>
+                    <form action="${pageContext.request.contextPath}/student/returnBook" method="post" style="display: inline;">
+                      <input type="hidden" name="transactionId" value="${transaction.transactionId}">
+                      <button type="submit" class="btn btn-outline">
+                        <i class="fas fa-undo"></i>
+                        Return
                       </button>
-                      <button class="btn btn-outline">
-                          <i class="fas fa-undo"></i>
-                          Return
-                      </button>
+                    </form>
                   </div>
+                </div>
               </div>
-          </div>
-
-          <!-- Book 2 -->
-          <div class="book-card">
-              <div class="book-cover">
-                  <img src="https://images.unsplash.com/photo-1589829085413-56de8ae18c73" alt="Book Cover">
-                  <div class="due-badge">Due in 5 days</div>
-              </div>
-              <div class="book-info">
-                  <h3 class="book-title">Clean Code</h3>
-                  <p class="book-author">Robert C. Martin</p>
-                  <div class="progress-bar">
-                      <div class="progress" style="width: 30%"></div>
-                  </div>
-                  <div class="book-meta">
-                      <span>30% completed</span>
-                      <span>Page 90 of 300</span>
-                  </div>
-                  <div class="book-actions">
-                      <button class="btn btn-primary">
-                          <i class="fas fa-book-reader"></i>
-                          Continue Reading
-                      </button>
-                      <button class="btn btn-outline">
-                          <i class="fas fa-undo"></i>
-                          Return
-                      </button>
-                  </div>
-              </div>
-          </div>
-
-          <!-- Book 3 -->
-          <div class="book-card">
-              <div class="book-cover">
-                  <img src="https://images.unsplash.com/photo-1544947950-fa07a98d237f" alt="Book Cover">
-                  <div class="due-badge">Due in 7 days</div>
-              </div>
-              <div class="book-info">
-                  <h3 class="book-title">Atomic Habits</h3>
-                  <p class="book-author">James Clear</p>
-                  <div class="progress-bar">
-                      <div class="progress" style="width: 45%"></div>
-                  </div>
-                  <div class="book-meta">
-                      <span>45% completed</span>
-                      <span>Page 135 of 300</span>
-                  </div>
-                  <div class="book-actions">
-                      <button class="btn btn-primary">
-                          <i class="fas fa-book-reader"></i>
-                          Continue Reading
-                      </button>
-                      <button class="btn btn-outline">
-                          <i class="fas fa-undo"></i>
-                          Return
-                      </button>
-                  </div>
-              </div>
-          </div>
-
+            </c:forEach>
+          </c:otherwise>
+        </c:choose>
       </div>
     </main>
   </div>

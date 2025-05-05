@@ -39,6 +39,19 @@ public class UserDao {
         }
     }
 
+    // Get user by ID
+    public User getUserById(int userId) throws SQLException {
+        String sql = "SELECT * FROM " + TABLE_NAME + " WHERE userId = ?";
+        try (Connection connection = DatabaseConnectionUtil.getConnection();
+             PreparedStatement ps = connection.prepareStatement(sql)) {
+
+            ps.setInt(1, userId);
+            try (ResultSet rs = ps.executeQuery()) {
+                return rs.next() ? mapUserFromResultSet(rs) : null;
+            }
+        }
+    }
+
     // Get user by username (for login)
     public User getUserByUsername(String username) throws SQLException {
         String sql = "SELECT * FROM " + TABLE_NAME + " WHERE username = ?";
@@ -94,7 +107,35 @@ public class UserDao {
         return users;
     }
 
-    // Update user role (admin function)
+    // Get all students
+    public List<User> getAllStudents() throws SQLException {
+        return getUsersByRole(UserRole.STUDENT);
+    }
+
+    // Get all admins
+    public List<User> getAllAdmins() throws SQLException {
+        return getUsersByRole(UserRole.ADMIN);
+    }
+
+    // Get users by specific role
+    public List<User> getUsersByRole(UserRole role) throws SQLException {
+        List<User> users = new ArrayList<>();
+        String sql = "SELECT * FROM " + TABLE_NAME + " WHERE role = ? ORDER BY userId";
+
+        try (Connection connection = DatabaseConnectionUtil.getConnection();
+             PreparedStatement ps = connection.prepareStatement(sql)) {
+
+            ps.setString(1, role.name());
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    users.add(mapUserFromResultSet(rs));
+                }
+            }
+        }
+        return users;
+    }
+
+    // Update user role
     public boolean updateUserRole(int userId, UserRole newRole) throws SQLException {
         String sql = "UPDATE " + TABLE_NAME + " SET role = ? WHERE userId = ?";
         try (Connection connection = DatabaseConnectionUtil.getConnection();
@@ -106,7 +147,37 @@ public class UserDao {
         }
     }
 
-    // Delete user (admin function)
+    // Update user information (including optional password update)
+    public boolean updateUser(User user) throws SQLException {
+        String sql = "UPDATE " + TABLE_NAME + " SET " +
+                "username = ?, fullName = ?, email = ?, phone = ?, " +
+                "address = ?, profilePic = ?, role = ? " +
+                (user.getPassword() != null && !user.getPassword().isEmpty() ? ", password = ? " : "") +
+                "WHERE userId = ?";
+
+        try (Connection connection = DatabaseConnectionUtil.getConnection();
+             PreparedStatement ps = connection.prepareStatement(sql)) {
+
+            int paramIndex = 1;
+            ps.setString(paramIndex++, user.getUsername());
+            ps.setString(paramIndex++, user.getFullName());
+            ps.setString(paramIndex++, user.getEmail());
+            ps.setString(paramIndex++, user.getPhone());
+            ps.setString(paramIndex++, user.getAddress());
+            ps.setString(paramIndex++, user.getProfilePic());
+            ps.setString(paramIndex++, user.getRole().name());
+
+            if (user.getPassword() != null && !user.getPassword().isEmpty()) {
+                ps.setString(paramIndex++, user.getPassword());
+            }
+
+            ps.setInt(paramIndex, user.getUserId());
+
+            return ps.executeUpdate() > 0;
+        }
+    }
+
+    // Delete user
     public boolean deleteUser(int userId) throws SQLException {
         String sql = "DELETE FROM " + TABLE_NAME + " WHERE userId = ?";
         try (Connection conn = DatabaseConnectionUtil.getConnection();
