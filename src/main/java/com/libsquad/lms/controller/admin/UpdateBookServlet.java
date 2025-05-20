@@ -1,9 +1,8 @@
 package com.libsquad.lms.controller.admin;
 
 import com.libsquad.lms.model.Book;
-
+import com.libsquad.lms.model.Book.Genre;
 import com.libsquad.lms.service.BookService;
-
 import com.libsquad.lms.utils.ValidationException;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.MultipartConfig;
@@ -17,62 +16,59 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Paths;
 
-@WebServlet(name = "AddBookServlet", urlPatterns = "/admin/addBook")
+@WebServlet(name = "UpdateBookServlet", urlPatterns = "/admin/updateBook")
 @MultipartConfig
-public class AddBookServlet extends HttpServlet {
+public class UpdateBookServlet extends HttpServlet {
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         try {
+            int bookId = Integer.parseInt(request.getParameter("bookId"));
             String title = request.getParameter("title");
             String author = request.getParameter("author");
             String publisher = request.getParameter("publisher");
             String edition = request.getParameter("edition");
             String isbn = request.getParameter("isbn");
-            Book.Genre genre = Book.Genre.valueOf(request.getParameter("genre"));
+            Genre genre = Genre.valueOf(request.getParameter("genre"));
             int copies = Integer.parseInt(request.getParameter("copies"));
             Part filePart = request.getPart("coverImage");
 
-            // Assuming you get description from the form (or set to empty string if no description input)
-            String description = request.getParameter("description");
-            if (description == null) description = "";
+            BookService bookService = new BookService();
+            Book book = bookService.getBookById(bookId);
 
-// Use copies for both totalCopies and availableCopies initially
-            Book book = new Book(
-                    title, author, publisher,
-                    edition, isbn, genre,
-                    copies, copies,
-                    description
-            );
+            // Update book details
+            book.setTitle(title);
+            book.setAuthor(author);
+            book.setPublisher(publisher);
+            book.setEdition(edition);
+            book.setIsbn(isbn);
+            book.setGenre(String.valueOf(genre));
+            book.setTotalCopies(copies);
 
-
+            // Handle cover image update directly
             if (filePart != null && filePart.getSize() > 0) {
-                // Get file name
                 String fileName = Paths.get(filePart.getSubmittedFileName()).getFileName().toString();
-
-                // Get real path to /uploads directory
                 String uploadPath = request.getServletContext().getRealPath("/uploads");
+
                 File uploadDir = new File(uploadPath);
                 if (!uploadDir.exists()) {
-                    uploadDir.mkdirs(); // Create folder if not exists
+                    uploadDir.mkdirs(); // Create folder if missing
                 }
 
-                // Write file to disk
-                String filePath = uploadPath + File.separator + fileName;
-                filePart.write(filePath);
+                String fullPath = uploadPath + File.separator + fileName;
+                filePart.write(fullPath);
 
-                // Save relative path in DB (optional: just fileName if you serve from /uploads)
+                // Save relative path or just fileName
                 book.setCoverImage("uploads/" + fileName);
             }
 
-            new BookService().createBook(book);
+            bookService.updateBook(book);
 
             response.sendRedirect(request.getContextPath() +
-                    "/admin/books?success=Book+added+successfully");
+                    "/admin/books?success=Book+updated+successfully");
 
         } catch (ValidationException | IllegalArgumentException e) {
             request.setAttribute("error", e.getMessage());
-            request.setAttribute("genres", Book.Genre.values());
             request.getRequestDispatcher("/WEB-INF/views/admin/bookList.jsp")
                     .forward(request, response);
         } catch (Exception e) {

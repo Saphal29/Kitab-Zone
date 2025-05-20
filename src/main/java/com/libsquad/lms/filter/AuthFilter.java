@@ -22,7 +22,8 @@ public class AuthFilter implements Filter {
             "/static/",  // Add this line
             "/error",
             "/",
-            "/home"
+            "/home",
+            "/uploads"
     );
 
     @Override

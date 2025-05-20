@@ -1,7 +1,5 @@
 package com.libsquad.lms.model;
 
-import com.libsquad.lms.utils.ValidationException;
-import com.libsquad.lms.service.BookService;
 import java.time.LocalDateTime;
 
 public class Book {
@@ -15,7 +13,13 @@ public class Book {
     private BookStatus status;
     private LocalDateTime addedDate;
     private String coverImage;
-    private int totalCopies;  // Changed 'copies' to 'totalCopies'
+    private int totalCopies;
+    private int availableCopies; // ✅ New field
+    private String description;  // ✅ New field
+
+    public Book() {
+
+    }
 
     public enum Genre {
         FICTION, NON_FICTION, SCIENCE, TECHNOLOGY
@@ -25,10 +29,11 @@ public class Book {
         AVAILABLE, RESERVED, ISSUED
     }
 
-    // Full Constructor (11 parameters)
+    // ✅ Full Constructor
     public Book(int bookId, String title, String author, String publisher,
                 String edition, String isbn, Genre genre, BookStatus status,
-                LocalDateTime addedDate, String coverImage, int totalCopies) { // Changed 'copies' to 'totalCopies'
+                LocalDateTime addedDate, String coverImage, int totalCopies,
+                int availableCopies, String description) {
         this.bookId = bookId;
         this.title = title;
         this.author = author;
@@ -39,103 +44,64 @@ public class Book {
         this.status = status;
         this.addedDate = addedDate;
         this.coverImage = coverImage;
-        this.totalCopies = totalCopies;  // Changed 'copies' to 'totalCopies'
+        this.totalCopies = totalCopies;
+        this.availableCopies = availableCopies;
+        this.description = description;
     }
 
-    // Minimal Constructor (for creating new books)
+    // ✅ Minimal Constructor
     public Book(String title, String author, String publisher, String edition,
-                String isbn, Genre genre, int totalCopies) {  // Changed 'copies' to 'totalCopies'
-        this(0, // bookId (temp value for new books)
-                title,
-                author,
-                publisher,
-                edition,
-                isbn,
-                genre,
-                BookStatus.AVAILABLE, // Default status
-                LocalDateTime.now(),  // Auto-generated addedDate
-                null,                 // Default coverImage
-                totalCopies          // Changed 'copies' to 'totalCopies'
-        );
+                String isbn, Genre genre, int totalCopies, int availableCopies, String description) {
+        this(0, title, author, publisher, edition, isbn, genre,
+                BookStatus.AVAILABLE, LocalDateTime.now(), null,
+                totalCopies, availableCopies, description);
     }
 
-    // Getters and setters
+    // ✅ Getters & Setters
+
     public int getBookId() { return bookId; }
     public void setBookId(int bookId) { this.bookId = bookId; }
 
-    public String getTitle() {
-        return title;
-    }
+    public String getTitle() { return title; }
+    public void setTitle(String title) { this.title = title; }
 
-    public void setTitle(String title) {
-        this.title = title;
-    }
+    public String getAuthor() { return author; }
+    public void setAuthor(String author) { this.author = author; }
 
-    public String getAuthor() {
-        return author;
-    }
+    public String getPublisher() { return publisher; }
+    public void setPublisher(String publisher) { this.publisher = publisher; }
 
-    public void setAuthor(String author) {
-        this.author = author;
-    }
+    public String getEdition() { return edition; }
+    public void setEdition(String edition) { this.edition = edition; }
 
-    public String getPublisher() {
-        return publisher;
-    }
+    public String getIsbn() { return isbn; }
+    public void setIsbn(String isbn) { this.isbn = isbn; }
 
-    public void setPublisher(String publisher) {
-        this.publisher = publisher;
-    }
+    public Genre getGenre() { return genre; }
+    public void setGenre(String genre) { this.genre = Genre.valueOf(genre); }
 
-    public String getEdition() {
-        return edition;
-    }
+    public BookStatus getStatus() { return status; }
+    public void setStatus(BookStatus status) { this.status = status; }
 
-    public void setEdition(String edition) {
-        this.edition = edition;
-    }
-
-    public String getIsbn() {
-        return isbn;
-    }
-
-    public void setIsbn(String isbn) {
-        this.isbn = isbn; // Direct assignment without validation
-    }
-
-    public Genre getGenre() {
-        return genre;
-    }
-
-    public void setGenre(String genre) {
-        this.genre = Genre.valueOf(genre);
-    }
-
-    public BookStatus getStatus() {
-        return status;
-    }
-
-    public void setStatus(BookStatus status) {
-        this.status = status;
-    }
-
-    public LocalDateTime getAddedDate() {
-        return addedDate;
-    }
-
-    public void setAddedDate(LocalDateTime addedDate) {
-        this.addedDate = addedDate;
-    }
+    public LocalDateTime getAddedDate() { return addedDate; }
+    public void setAddedDate(LocalDateTime addedDate) { this.addedDate = addedDate; }
 
     public String getCoverImage() { return coverImage; }
     public void setCoverImage(String coverImage) { this.coverImage = coverImage; }
 
-    public int getTotalCopies() { return totalCopies; }  // Changed 'copies' to 'totalCopies'
-    public void setTotalCopies(int totalCopies) { this.totalCopies = totalCopies; }  // Changed 'copies' to 'totalCopies'
+    public int getTotalCopies() { return totalCopies; }
+    public void setTotalCopies(int totalCopies) { this.totalCopies = totalCopies; }
 
-    // Status check helpers (MUST KEEP)
+    public int getAvailableCopies() { return availableCopies; }
+    public void setAvailableCopies(int availableCopies) { this.availableCopies = availableCopies; }
+
+    public String getDescription() { return description; }
+    public void setDescription(String description) { this.description = description; }
+
+    // ✅ Status Helpers
+
     public boolean isAvailable() {
-        return status == BookStatus.AVAILABLE && totalCopies > 0;  // Changed 'copies' to 'totalCopies'
+        return status == BookStatus.AVAILABLE && availableCopies > 0;
     }
 
     public boolean isReserved() {
@@ -143,11 +109,10 @@ public class Book {
     }
 
     public boolean canBeIssued() {
-        return isAvailable() && totalCopies >= 1;  // Changed 'copies' to 'totalCopies'
+        return isAvailable() && availableCopies >= 1;
     }
 
-    // New helper for copy availability
     public boolean hasLowStock() {
-        return totalCopies <= 3;  // Changed 'copies' to 'totalCopies'
+        return availableCopies <= 3;
     }
 }

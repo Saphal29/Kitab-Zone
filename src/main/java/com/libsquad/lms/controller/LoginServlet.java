@@ -12,47 +12,40 @@ import java.sql.SQLException;
 @WebServlet(name = "LoginServlet", urlPatterns = "/login")
 public class LoginServlet extends HttpServlet {
 
+    // Handle GET requests (loading the login page)
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         request.getRequestDispatcher("/WEB-INF/views/login.jsp").forward(request, response);
     }
-    @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
         String username = request.getParameter("username");
         String password = request.getParameter("password");
 
-
-
         try {
-
             AuthService authService = new AuthService();
             User user = authService.authenticate(username, password);
 
-
             if (user != null) {
-                //Creating a session and setting the user attribute
                 HttpSession session = request.getSession();
+                // Store both user object and user ID
                 session.setAttribute("user", user);
+                session.setAttribute("userId", user.getUserId()); // Add this line
 
-                //creating Cookie to remember the user
+                // Cookie logic remains the same
                 Cookie cookie = new Cookie("user", user.getUsername());
                 cookie.setMaxAge(60*50);
                 cookie.setPath("/");
                 response.addCookie(cookie);
 
-                //Redirecting the user based on Role
-                if (user.isSuperAdmin() || user.isAdmin()) {
-                    response.sendRedirect(request.getContextPath() + "/admin/adminDashboard");
-                } else {
-                    response.sendRedirect(request.getContextPath() + "/student/studentDashboard");
-                }
-
+                // Redirect based on role
+                String redirectPath = (user.isSuperAdmin() || user.isAdmin())
+                        ? "/admin/adminDashboard"
+                        : "/student/studentDashboard";
+                response.sendRedirect(request.getContextPath() + redirectPath);
                 return;
-
-
-        } else {
+            } else {
                 request.setAttribute("error", "Invalid credentials");
                 request.getRequestDispatcher("/WEB-INF/views/login.jsp").forward(request, response);
             }
@@ -60,6 +53,7 @@ public class LoginServlet extends HttpServlet {
             handleDatabaseError(request, response, e);
         }
     }
+
 
     private void handleInvalidRole(HttpServletRequest request, HttpServletResponse response, HttpSession session)
             throws IOException, ServletException {

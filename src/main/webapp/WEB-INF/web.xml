@@ -14,6 +14,10 @@
         <url-pattern>/static/*</url-pattern>  <!-- CSS/JS/Images -->
     </servlet-mapping>
 
+    <servlet-mapping>
+        <servlet-name>default</servlet-name>
+        <url-pattern>/uploads/*</url-pattern>
+    </servlet-mapping>
     <!-- Error Pages -->
     <error-page>
         <error-code>404</error-code>
@@ -26,7 +30,7 @@
 
     <!-- Session Configuration -->
     <session-config>
-        <session-timeout>30</session-timeout>  <!-- 30 minutes -->
+        <session-timeout>50</session-timeout>  <!-- 50 minutes -->
         <cookie-config>
             <http-only>true</http-only>
             <secure>true</secure>  <!-- Enable for HTTPS -->

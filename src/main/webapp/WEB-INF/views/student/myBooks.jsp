@@ -1,6 +1,8 @@
-<%@ page contentType="text/html;charset=UTF-8" %>
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -388,11 +390,15 @@
       </c:if>
 
       <div class="tabs">
-        <div class="tab active">Currently Borrowed (${not empty transactions ? transactions.size() : 0})</div>
+        <div class="tab active">
+          Currently Borrowed (<c:out value="${not empty transactions ? transactions.size() : 0}"/>)
+        </div>
+        <!-- You can add tabs for Reading History, Saved Books, etc. -->
         <div class="tab">Reading History</div>
         <div class="tab">Saved Books</div>
       </div>
 
+      <!-- Books Grid -->
       <div class="books-grid">
         <c:choose>
           <c:when test="${empty transactions}">
@@ -408,10 +414,17 @@
                 <div class="book-cover">
                   <c:choose>
                     <c:when test="${not empty transaction.bookCoverImage}">
-                      <img src="${transaction.bookCoverImage}" alt="${transaction.bookTitle}">
+                      <c:choose>
+                        <c:when test="${fn:startsWith(transaction.bookCoverImage, 'uploads/')}">
+                          <img src="${pageContext.request.contextPath}/${transaction.bookCoverImage}" alt="${transaction.bookTitle}" />
+                        </c:when>
+                        <c:otherwise>
+                          <img src="${pageContext.request.contextPath}/uploads/${transaction.bookCoverImage}" alt="${transaction.bookTitle}" />
+                        </c:otherwise>
+                      </c:choose>
                     </c:when>
                     <c:otherwise>
-                      <img src="https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c" alt="Default Book Cover">
+                      <img src="https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c" alt="Default Book Cover" />
                     </c:otherwise>
                   </c:choose>
                   <div class="due-badge">
@@ -421,22 +434,19 @@
                 <div class="book-info">
                   <h3 class="book-title">${transaction.bookTitle}</h3>
                   <p class="book-author">${transaction.bookAuthor}</p>
-                  <div class="progress-bar">
-                    <div class="progress" style="width: 30%"></div>
-                  </div>
                   <div class="book-meta">
-                    <span>Borrowed: <fmt:formatDate value="${transaction.checkoutDate}" pattern="MMM dd, yyyy"/></span>
+                    <span>Borrowed: <fmt:formatDate value="${transaction.borrowDate}" pattern="MMM dd, yyyy"/></span>
                   </div>
                   <div class="book-actions">
-                    <button class="btn btn-primary">
+                    <button class="btn btn-primary" type="button">
                       <i class="fas fa-book-reader"></i>
                       Continue Reading
                     </button>
                     <form action="${pageContext.request.contextPath}/student/returnBook" method="post" style="display: inline;">
-                      <input type="hidden" name="transactionId" value="${transaction.transactionId}">
+                      <input type="hidden" name="transactionId" value="${transaction.id}" />
                       <button type="submit" class="btn btn-outline">
                         <i class="fas fa-undo"></i>
-                        Return
+                        Return Book
                       </button>
                     </form>
                   </div>

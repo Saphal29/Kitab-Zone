@@ -264,6 +264,52 @@
             font-size: 14px;
             color: var(--text-primary);
         }
+
+        /* Add this to your existing CSS */
+        .nav-item.logout {
+            margin-top: auto;
+            color: var(--danger);
+        }
+
+        .nav-item.logout:hover {
+            background: #FFEBEE;
+            color: var(--danger);
+        }
+
+        .nav-item.logout i {
+            color: var(--danger);
+        }
+        /* Add to your existing CSS */
+        .sidebar {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+        }
+
+        nav {
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1; /* Takes up remaining space */
+        }
+
+        .nav-footer {
+            margin-top: auto; /* Pushes the footer to the bottom */
+            padding-top: 1rem;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .nav-item.logout {
+            color: var(--danger);
+        }
+
+        .nav-item.logout:hover {
+            background: #FFEBEE;
+            color: var(--danger);
+        }
+
+        .nav-item.logout i {
+            color: var(--danger);
+        }
     </style>
 </head>
 <body>
@@ -300,6 +346,16 @@
           <i class="fas fa-user"></i>
           Profile
       </a>
+
+
+          <div class="nav-footer">
+                <a href="${pageContext.request.contextPath}/logout"
+                   class="nav-item logout"
+                   onclick="return confirm('Are you sure you want to logout?')">
+                   <i class="fas fa-sign-out-alt"></i>
+                   Logout
+                </a>
+            </div>
   </nav>
 </aside>
         <!-- Main Content -->
@@ -428,5 +484,11 @@
             </div>
         </main>
     </div>
+    <script>
+    // Basic confirmation
+    function confirmLogout() {
+        return confirm('Are you sure you want to logout?');
+    }
+    </script>
 </body>
 </html>

@@ -1,51 +1,102 @@
 package com.libsquad.lms.model;
 
-import java.time.LocalDateTime;
+import java.sql.Date;
 
 public class Transaction {
-    private int transactionId;
+    private int id;
     private int userId;
     private int bookId;
-    private LocalDateTime checkoutDate;
-    private LocalDateTime dueDate;
-    private LocalDateTime returnDate;
-    private Status status;
-    private int renewCount;
+    private Date borrowDate;
+    private Date dueDate;
+    private Date returnDate;
+    private String status;
 
-    // Additional fields for display
     private String bookTitle;
     private String bookAuthor;
     private String bookCoverImage;
 
-    public enum Status {
-        ACTIVE, RETURNED, OVERDUE
+    // No-arg constructor
+    public Transaction() {
+        // No-arg constructor for DAO use
     }
 
-    // Getters and setters
-    public int getTransactionId() { return transactionId; }
-    public void setTransactionId(int transactionId) { this.transactionId = transactionId; }
+    // Constructor without ID (for creating new transactions)
+    public Transaction(int userId, int bookId, Date borrowDate, Date dueDate, Date returnDate, String status) {
+        this.userId = userId;
+        this.bookId = bookId;
+        this.borrowDate = borrowDate;
+        this.dueDate = dueDate;
+        this.returnDate = returnDate;
+        this.status = status;
+    }
 
-    public int getUserId() { return userId; }
-    public void setUserId(int userId) { this.userId = userId; }
+    // Constructor with ID (for reading from DB)
+    public Transaction(int id, int userId, int bookId, Date borrowDate, Date dueDate, Date returnDate, String status) {
+        this.id = id;
+        this.userId = userId;
+        this.bookId = bookId;
+        this.borrowDate = borrowDate;
+        this.dueDate = dueDate;
+        this.returnDate = returnDate;
+        this.status = status;
+    }
 
-    public int getBookId() { return bookId; }
-    public void setBookId(int bookId) { this.bookId = bookId; }
+    // Getters and Setters
+    public int getId() {
+        return id;
+    }
 
-    public LocalDateTime getCheckoutDate() { return checkoutDate; }
-    public void setCheckoutDate(LocalDateTime checkoutDate) { this.checkoutDate = checkoutDate; }
+    public void setId(int id) {
+        this.id = id;
+    }
 
-    public LocalDateTime getDueDate() { return dueDate; }
-    public void setDueDate(LocalDateTime dueDate) { this.dueDate = dueDate; }
+    public int getUserId() {
+        return userId;
+    }
 
-    public LocalDateTime getReturnDate() { return returnDate; }
-    public void setReturnDate(LocalDateTime returnDate) { this.returnDate = returnDate; }
+    public void setUserId(int userId) {
+        this.userId = userId;
+    }
 
-    public Status getStatus() { return status; }
-    public void setStatus(Status status) { this.status = status; }
+    public int getBookId() {
+        return bookId;
+    }
 
-    public int getRenewCount() { return renewCount; }
-    public void setRenewCount(int renewCount) { this.renewCount = renewCount; }
+    public void setBookId(int bookId) {
+        this.bookId = bookId;
+    }
 
+    public Date getBorrowDate() {
+        return borrowDate;
+    }
+
+    public void setBorrowDate(Date borrowDate) {
+        this.borrowDate = borrowDate;
+    }
+
+    public Date getDueDate() {
+        return dueDate;
+    }
+
+    public void setDueDate(Date dueDate) {
+        this.dueDate = dueDate;
+    }
+
+    public Date getReturnDate() {
+        return returnDate;
+    }
+
+    public void setReturnDate(Date returnDate) {
+        this.returnDate = returnDate;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
     public String getBookTitle() { return bookTitle; }
     public void setBookTitle(String bookTitle) { this.bookTitle = bookTitle; }
 
@@ -54,4 +105,5 @@ public class Transaction {
 
     public String getBookCoverImage() { return bookCoverImage; }
     public void setBookCoverImage(String bookCoverImage) { this.bookCoverImage = bookCoverImage; }
+
 }

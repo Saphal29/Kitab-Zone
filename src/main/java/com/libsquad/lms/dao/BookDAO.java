@@ -3,8 +3,6 @@ package com.libsquad.lms.dao;
 import com.libsquad.lms.model.Book;
 import com.libsquad.lms.model.Book.BookStatus;
 import com.libsquad.lms.model.Book.Genre;
-import com.libsquad.lms.utils.DatabaseConnectionUtil;
-
 import java.sql.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -12,128 +10,116 @@ import java.util.List;
 import java.util.Optional;
 
 public class BookDAO {
+    private final Connection conn;
     private static final String TABLE_NAME = "books";
 
-    public void create(Book book) {
+    public BookDAO(Connection conn) {
+        this.conn = conn;
+    }
+
+    // Create a new book
+    public void create(Book book) throws SQLException {
         String sql = "INSERT INTO " + TABLE_NAME + " (" +
                 "title, author, publisher, edition, isbn, genre, " +
-                "status, added_date, cover_image, total_copies" +  // Changed 'copies' to 'total_copies'
-                ") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                "status, added_date, cover_image, total_copies, available_copies, description" +
+                ") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
-        try (Connection conn = DatabaseConnectionUtil.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
-
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             setInsertParameters(stmt, book);
             stmt.executeUpdate();
-        } catch (SQLException e) {
-            throw new RuntimeException("Database error creating book", e);
         }
     }
 
-    public void update(Book book) {
+    // Update existing book
+    public void update(Book book) throws SQLException {
         String sql = "UPDATE " + TABLE_NAME + " SET " +
                 "title = ?, author = ?, publisher = ?, edition = ?, " +
-                "isbn = ?, genre = ?, status = ?, total_copies = ?, " + // Changed 'copies' to 'total_copies'
-                "cover_image = ? WHERE book_id = ?";
+                "isbn = ?, genre = ?, status = ?, total_copies = ?, " +
+                "available_copies = ?, cover_image = ?, description = ? " +
+                "WHERE book_id = ?";
 
-        try (Connection conn = DatabaseConnectionUtil.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
-
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             setUpdateParameters(stmt, book);
             stmt.executeUpdate();
-        } catch (SQLException e) {
-            throw new RuntimeException("Database error updating book", e);
         }
     }
 
-    public void delete(int bookId) {
+    // Delete a book
+    public void delete(int bookId) throws SQLException {
         String sql = "DELETE FROM " + TABLE_NAME + " WHERE book_id = ?";
-
-        try (Connection conn = DatabaseConnectionUtil.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
-
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, bookId);
             stmt.executeUpdate();
-        } catch (SQLException e) {
-            throw new RuntimeException("Database error deleting book", e);
         }
     }
 
-    public Optional<Book> findById(int bookId) {
+    // Find book by ID
+    public Optional<Book> findById(int bookId) throws SQLException {
         String sql = "SELECT * FROM " + TABLE_NAME + " WHERE book_id = ?";
-
-        try (Connection conn = DatabaseConnectionUtil.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
-
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, bookId);
-            ResultSet rs = stmt.executeQuery();
-
-            if (rs.next()) {
-                return Optional.of(mapRowToBook(rs));
+            try (ResultSet rs = stmt.executeQuery()) {
+                return rs.next() ? Optional.of(mapRowToBook(rs)) : Optional.empty();
             }
-            return Optional.empty();
-        } catch (SQLException e) {
-            throw new RuntimeException("Database error finding book", e);
         }
     }
 
-    public List<Book> findAll() {
-        String sql = "SELECT * FROM " + TABLE_NAME;
+    // Get all books
+    public List<Book> findAll() throws SQLException {
         List<Book> books = new ArrayList<>();
+        String sql = "SELECT * FROM " + TABLE_NAME;
 
-        try (Connection conn = DatabaseConnectionUtil.getConnection();
-             Statement stmt = conn.createStatement();
+        try (Statement stmt = conn.createStatement();
              ResultSet rs = stmt.executeQuery(sql)) {
-
             while (rs.next()) {
                 books.add(mapRowToBook(rs));
             }
-            return books;
-        } catch (SQLException e) {
-            throw new RuntimeException("Database error retrieving books", e);
         }
+        return books;
     }
 
-    public List<Book> search(String query) {
-        String sql = "SELECT * FROM " + TABLE_NAME + " WHERE " +
-                "title LIKE ? OR author LIKE ? OR isbn LIKE ?";
-
+    // Search books
+    public List<Book> search(String query) throws SQLException {
         List<Book> books = new ArrayList<>();
+        String sql = "SELECT * FROM " + TABLE_NAME + " WHERE title LIKE ? OR author LIKE ? OR isbn LIKE ?";
 
-        try (Connection conn = DatabaseConnectionUtil.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
-
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             String searchTerm = "%" + query + "%";
             stmt.setString(1, searchTerm);
             stmt.setString(2, searchTerm);
             stmt.setString(3, searchTerm);
 
-            ResultSet rs = stmt.executeQuery();
-            while (rs.next()) {
-                books.add(mapRowToBook(rs));
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    books.add(mapRowToBook(rs));
+                }
             }
-            return books;
-        } catch (SQLException e) {
-            throw new RuntimeException("Database error searching books", e);
+        }
+        return books;
+    }
+
+    // Stock management methods
+    public void incrementAvailableCopies(int bookId) throws SQLException {
+        updateCopies(bookId, 1);
+    }
+
+    public void decrementAvailableCopies(int bookId) throws SQLException {
+        updateCopies(bookId, -1);
+    }
+
+    private void updateCopies(int bookId, int delta) throws SQLException {
+        String sql = "UPDATE " + TABLE_NAME + " SET available_copies = available_copies + ? " +
+                "WHERE book_id = ? AND available_copies + ? >= 0";
+
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, delta);
+            stmt.setInt(2, bookId);
+            stmt.setInt(3, delta);
+            stmt.executeUpdate();
         }
     }
 
-    public boolean exists(int bookId) {
-        String sql = "SELECT COUNT(*) FROM " + TABLE_NAME + " WHERE book_id = ?";
-
-        try (Connection conn = DatabaseConnectionUtil.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
-
-            stmt.setInt(1, bookId);
-            ResultSet rs = stmt.executeQuery();
-            return rs.next() && rs.getInt(1) > 0;
-        } catch (SQLException e) {
-            throw new RuntimeException("Database error checking book existence", e);
-        }
-    }
-
-    // --- Helper Methods ---
-
+    // Helper methods
     private void setInsertParameters(PreparedStatement stmt, Book book) throws SQLException {
         stmt.setString(1, book.getTitle());
         stmt.setString(2, book.getAuthor());
@@ -144,7 +130,9 @@ public class BookDAO {
         stmt.setString(7, book.getStatus().name());
         stmt.setTimestamp(8, Timestamp.valueOf(book.getAddedDate()));
         stmt.setString(9, book.getCoverImage());
-        stmt.setInt(10, book.getTotalCopies());  // Changed 'copies' to 'totalCopies'
+        stmt.setInt(10, book.getTotalCopies());
+        stmt.setInt(11, book.getAvailableCopies());
+        stmt.setString(12, book.getDescription());
     }
 
     private void setUpdateParameters(PreparedStatement stmt, Book book) throws SQLException {
@@ -155,27 +143,28 @@ public class BookDAO {
         stmt.setString(5, book.getIsbn());
         stmt.setString(6, book.getGenre().name());
         stmt.setString(7, book.getStatus().name());
-        stmt.setInt(8, book.getTotalCopies());  // Changed 'copies' to 'totalCopies'
-        stmt.setString(9, book.getCoverImage());
-        stmt.setInt(10, book.getBookId());
+        stmt.setInt(8, book.getTotalCopies());
+        stmt.setInt(9, book.getAvailableCopies());
+        stmt.setString(10, book.getCoverImage());
+        stmt.setString(11, book.getDescription());
+        stmt.setInt(12, book.getBookId());
     }
 
     private Book mapRowToBook(ResultSet rs) throws SQLException {
-        Timestamp ts = rs.getTimestamp("added_date");
-        LocalDateTime addedDate = ts != null ? ts.toLocalDateTime() : null;
-
         return new Book(
                 rs.getInt("book_id"),
                 rs.getString("title"),
                 rs.getString("author"),
-                rs.getString("isbn"),
                 rs.getString("publisher"),
                 rs.getString("edition"),
+                rs.getString("isbn"),
                 parseGenre(rs.getString("genre")),
                 parseBookStatus(rs.getString("status")),
-                addedDate,
+                rs.getTimestamp("added_date").toLocalDateTime(),
                 rs.getString("cover_image"),
-                rs.getInt("total_copies")  // Changed 'copies' to 'total_copies'
+                rs.getInt("total_copies"),
+                rs.getInt("available_copies"),
+                rs.getString("description")
         );
     }
 
@@ -183,7 +172,7 @@ public class BookDAO {
         try {
             return Genre.valueOf(value);
         } catch (IllegalArgumentException e) {
-            return Genre.FICTION; // Default fallback
+            return Genre.FICTION;
         }
     }
 
@@ -191,7 +180,7 @@ public class BookDAO {
         try {
             return BookStatus.valueOf(value);
         } catch (IllegalArgumentException e) {
-            return BookStatus.AVAILABLE; // Default fallback
+            return BookStatus.AVAILABLE;
         }
     }
 }
