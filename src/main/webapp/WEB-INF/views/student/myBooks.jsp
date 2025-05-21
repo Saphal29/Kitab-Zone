@@ -2,6 +2,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+<jsp:useBean id="today" class="java.util.Date" />
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -44,50 +45,48 @@
     }
 
     .app-container {
-      display: flex;
-      width: 100%;
-      height: 100vh;
-    }
+               display: grid;
+               grid-template-columns: 250px 1fr;
+               min-height: 100vh;
+           }
 
-    /* Sidebar */
-    .sidebar {
-      width: 250px;
-      background: var(--card-bg);
-      padding: 1.5rem;
-      border-right: 1px solid var(--border-color);
-      display: flex;
-      flex-direction: column;
-    }
+           .sidebar {
+               background: white;
+               padding: 20px;
+               box-shadow: var(--shadow);
+           }
 
-    .app-logo {
-      display: flex;
-      align-items: center;
-      font-size: 1.5rem;
-      font-weight: 600;
-      color: var(--text-primary);
-      gap: 0.5rem;
-      margin-bottom: 2rem;
-    }
+           .app-logo {
+               display: flex;
+               align-items: center;
+               gap: 10px;
+               font-size: 1.5rem;
+               font-weight: bold;
+               color: var(--primary);
+               margin-bottom: 30px;
+           }
 
-    .nav-item {
-      display: flex;
-      align-items: center;
-      padding: 0.75rem 1rem;
-      border-radius: var(--radius);
-      font-size: 1rem;
-      gap: 0.75rem;
-      margin-bottom: 0.5rem;
-      transition: background 0.2s;
-    }
+           .nav-item {
+               display: flex;
+               align-items: center;
+               gap: 10px;
+               padding: 12px 15px;
+               color: var(--text);
+               text-decoration: none;
+               border-radius: 8px;
+               margin-bottom: 5px;
+               transition: all 0.3s ease;
+           }
 
-    .nav-item:hover {
-      background: var(--hover-bg);
-    }
+           .nav-item:hover {
+               background: var(--primary-light);
+           }
 
-    .nav-item.active {
-      background: var(--primary);
-      color: #fff;
-    }
+           .nav-item.active {
+               background: var(--primary);
+               color: white;
+           }
+
 
     /* Main Content */
     .main-content {
@@ -173,14 +172,33 @@
 
     .due-badge {
       position: absolute;
-      top: 1rem;
-      right: 1rem;
-      background: rgba(220, 53, 69, 0.9);
+      top: 10px;
+      right: 10px;
+      background: var(--primary);
       color: white;
-      padding: 0.25rem 0.75rem;
-      border-radius: 1rem;
-      font-size: 0.75rem;
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 0.9rem;
       font-weight: 500;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .due-badge.urgent {
+      background: var(--warning);
+      color: var(--text-primary);
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0% {
+        transform: scale(1);
+      }
+      50% {
+        transform: scale(1.05);
+      }
+      100% {
+        transform: scale(1);
+      }
     }
 
     .book-info {
@@ -334,40 +352,31 @@
   </style>
 </head>
 <body>
-  <div class="app-container">
-    <!-- Sidebar -->
-    <aside class="sidebar">
-      <div class="app-logo">
-        <i class="fas fa-book"></i>
-        KitabZone
-      </div>
-      <nav>
-        <a href="${pageContext.request.contextPath}/student/studentDashboard" class="nav-item">
-          <i class="fas fa-th-large"></i>
-          Dashboard
-        </a>
-        <a href="${pageContext.request.contextPath}/student/myBooks" class="nav-item active">
-          <i class="fas fa-book"></i>
-          My Books
-        </a>
-        <a href="${pageContext.request.contextPath}/student/browseBooks" class="nav-item">
-          <i class="fas fa-search"></i>
-          Browse Books
-        </a>
-        <a href="${pageContext.request.contextPath}/student/reservation" class="nav-item">
-          <i class="fas fa-clock"></i>
-          Reservations
-        </a>
-        <a href="${pageContext.request.contextPath}/student/fines" class="nav-item">
-          <i class="fas fa-dollar-sign"></i>
-          Fines & Payments
-        </a>
-        <a href="${pageContext.request.contextPath}/student/profile" class="nav-item">
-          <i class="fas fa-user"></i>
-          Profile
-        </a>
-      </nav>
-    </aside>
+  <aside class="sidebar">
+              <div class="app-logo">
+                  <i class="fas fa-book"></i> KitabZone
+              </div>
+              <nav>
+                  <a href="${pageContext.request.contextPath}/student/studentDashboard" class="nav-item">
+                      <i class="fas fa-th-large"></i> Dashboard
+                  </a>
+                  <a href="${pageContext.request.contextPath}/student/browseBooks" class="nav-item">
+                      <i class="fas fa-book"></i> Browse Books
+                  </a>
+                  <a href="${pageContext.request.contextPath}/student/myBooks" class="nav-item active">
+                      <i class="fas fa-book-reader"></i> My Books
+                  </a>
+                  <a href="${pageContext.request.contextPath}/student/reservation" class="nav-item ">
+                                            <i class="fas fa-book-reader"></i> My Reservations
+                                            </a>
+                  <a href="${pageContext.request.contextPath}/student/fines" class="nav-item">
+                      <i class="fas fa-money-bill-wave"></i> My Fines
+                  </a>
+                  <a href="${pageContext.request.contextPath}/student/profile" class="nav-item ">
+                      <i class="fas fa-user"></i> Profile
+                  </a>
+              </nav>
+          </aside>
 
     <!-- Main Content -->
     <main class="main-content">
@@ -393,9 +402,7 @@
         <div class="tab active">
           Currently Borrowed (<c:out value="${not empty transactions ? transactions.size() : 0}"/>)
         </div>
-        <!-- You can add tabs for Reading History, Saved Books, etc. -->
-        <div class="tab">Reading History</div>
-        <div class="tab">Saved Books</div>
+
       </div>
 
       <!-- Books Grid -->
@@ -427,7 +434,7 @@
                       <img src="https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c" alt="Default Book Cover" />
                     </c:otherwise>
                   </c:choose>
-                  <div class="due-badge">
+                  <div class="due-badge ${transaction.dueDate eq today ? 'urgent' : ''}">
                     Due <fmt:formatDate value="${transaction.dueDate}" pattern="MMM dd"/>
                   </div>
                 </div>

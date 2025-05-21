@@ -20,18 +20,25 @@ public class AdminAuthFilter implements Filter {
         HttpServletResponse res = (HttpServletResponse) response;
         HttpSession session = req.getSession(false);
 
-        User user = (session != null) ? (User) session.getAttribute("user") : null;
+        // Log the request for debugging
+        System.out.println("AdminAuthFilter: Processing request to " + req.getRequestURI());
 
-        if (user == null) {
-            res.sendRedirect(req.getContextPath() + "/access-denied");
+        if (session == null || session.getAttribute("user") == null) {
+            System.out.println("AdminAuthFilter: No session or user found, redirecting to login");
+            res.sendRedirect(req.getContextPath() + "/login");
             return;
         }
 
+        User user = (User) session.getAttribute("user");
+        System.out.println("AdminAuthFilter: User role: " + user.getRole());
+
         if (user.isSuperAdmin() || user.isAdmin()) {
             // Let request proceed for Admins/SuperAdmins
+            System.out.println("AdminAuthFilter: Access granted for admin user");
             chain.doFilter(request, response);
         } else {
             // Deny access to non-admins
+            System.out.println("AdminAuthFilter: Access denied for non-admin user");
             res.sendRedirect(req.getContextPath() + "/access-denied");
         }
     }

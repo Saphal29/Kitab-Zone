@@ -2,44 +2,54 @@ package com.libsquad.lms.model;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 public class Fine {
     private int fineId;
     private int userId;
-    private int transactionId;
+    private int bookId;
+    private Integer transactionId;
     private BigDecimal amount;
-    private LocalDate issuedDate;
-    private LocalDate paidDate;
+    private FineReason reason;
     private FineStatus status;
+    private LocalDateTime createdAt;
+    private LocalDate dueDate;
+    private LocalDateTime paidAt;
+    private LocalDateTime waivedAt;
+    private Integer waivedBy;
+    private String notes;
 
-    // Enums for fine status
+    // Additional fields for display purposes
+    private String userName;
+    private String bookTitle;
+    private String waivedByName;
+
+    public enum FineReason {
+        LATE_RETURN,
+        DAMAGED_BOOK,
+        LOST_BOOK,
+        OTHER
+    }
+
     public enum FineStatus {
-        PAID, UNPAID
+        PENDING,
+        PAID,
+        WAIVED,
+        CANCELLED
     }
 
-    // Constructor for new fines
-    public Fine(int userId, int transactionId, BigDecimal amount,
-                LocalDate issuedDate) {
-        this.userId = userId;
-        this.transactionId = transactionId;
-        this.amount = amount;
-        this.issuedDate = issuedDate;
-        this.status = FineStatus.UNPAID; // Default status
+    public enum PaymentMethod {
+        CASH,
+        ONLINE
     }
 
-    // Full constructor (for database retrieval)
-    public Fine(int fineId, int userId, int transactionId, BigDecimal amount,
-                LocalDate issuedDate, LocalDate paidDate, FineStatus status) {
-        this.fineId = fineId;
-        this.userId = userId;
-        this.transactionId = transactionId;
-        this.amount = amount;
-        this.issuedDate = issuedDate;
-        this.paidDate = paidDate;
-        this.status = status;
+    // Default constructor
+    public Fine() {
+        this.status = FineStatus.PENDING;
+        this.createdAt = LocalDateTime.now();
     }
 
-    // Getters/Setters
+    // Getters and Setters
     public int getFineId() {
         return fineId;
     }
@@ -56,11 +66,19 @@ public class Fine {
         this.userId = userId;
     }
 
-    public int getTransactionId() {
+    public int getBookId() {
+        return bookId;
+    }
+
+    public void setBookId(int bookId) {
+        this.bookId = bookId;
+    }
+
+    public Integer getTransactionId() {
         return transactionId;
     }
 
-    public void setTransactionId(int transactionId) {
+    public void setTransactionId(Integer transactionId) {
         this.transactionId = transactionId;
     }
 
@@ -72,20 +90,12 @@ public class Fine {
         this.amount = amount;
     }
 
-    public LocalDate getIssuedDate() {
-        return issuedDate;
+    public FineReason getReason() {
+        return reason;
     }
 
-    public void setIssuedDate(LocalDate issuedDate) {
-        this.issuedDate = issuedDate;
-    }
-
-    public LocalDate getPaidDate() {
-        return paidDate;
-    }
-
-    public void setPaidDate(LocalDate paidDate) {
-        this.paidDate = paidDate;
+    public void setReason(FineReason reason) {
+        this.reason = reason;
     }
 
     public FineStatus getStatus() {
@@ -96,8 +106,92 @@ public class Fine {
         this.status = status;
     }
 
-    // Helper to check if fine is paid
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public LocalDate getDueDate() {
+        return dueDate;
+    }
+
+    public void setDueDate(LocalDate dueDate) {
+        this.dueDate = dueDate;
+    }
+
+    public LocalDateTime getPaidAt() {
+        return paidAt;
+    }
+
+    public void setPaidAt(LocalDateTime paidAt) {
+        this.paidAt = paidAt;
+    }
+
+    public LocalDateTime getWaivedAt() {
+        return waivedAt;
+    }
+
+    public void setWaivedAt(LocalDateTime waivedAt) {
+        this.waivedAt = waivedAt;
+    }
+
+    public Integer getWaivedBy() {
+        return waivedBy;
+    }
+
+    public void setWaivedBy(Integer waivedBy) {
+        this.waivedBy = waivedBy;
+    }
+
+    public String getNotes() {
+        return notes;
+    }
+
+    public void setNotes(String notes) {
+        this.notes = notes;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
+    public String getBookTitle() {
+        return bookTitle;
+    }
+
+    public void setBookTitle(String bookTitle) {
+        this.bookTitle = bookTitle;
+    }
+
+    public String getWaivedByName() {
+        return waivedByName;
+    }
+
+    public void setWaivedByName(String waivedByName) {
+        this.waivedByName = waivedByName;
+    }
+
+    // Helper methods
+    public boolean isPending() {
+        return status == FineStatus.PENDING;
+    }
+
     public boolean isPaid() {
         return status == FineStatus.PAID;
+    }
+
+    public boolean isWaived() {
+        return status == FineStatus.WAIVED;
+    }
+
+    public boolean isOverdue() {
+        return isPending() && dueDate.isBefore(LocalDate.now());
     }
 }

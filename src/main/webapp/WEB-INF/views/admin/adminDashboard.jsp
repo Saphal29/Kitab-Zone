@@ -1,442 +1,324 @@
-<%@ page contentType="text/html;charset=UTF-8" %>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<!DOCTYPE html>
 <html>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Library App</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Include Chart.js for graphs -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <title>Admin Dashboard - KitabZone</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-       :root {
-         --primary: #4CAF50;
-         --background: #F8F9FA;
-         --card-bg: #FFFFFF;
-         --text-primary: #2D3436;
-         --text-secondary: #636E72;
-         --border-color: #E9ECEF;
-         --hover-bg: #F1F4F6;
-         --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-         --radius: 12px;
-         --transition-speed: 0.3s;
-       }
-
-
-       * {
-         margin: 0;
-         padding: 0;
-         box-sizing: border-box;
-         font-family: 'Segoe UI', Roboto, sans-serif;
-       }
-
-       body {
-         background: var(--background);
-         color: var(--text-primary);
-       }
-
-       a {
-         text-decoration: none;
-         color: inherit;
-       }
-
-       .app-container {
-         display: flex;
-         height: 100vh;
-         overflow: hidden;
-       }
-
-       /* Sidebar */
-       .sidebar {
-         background: var(--card-bg);
-         border-right: 1px solid var(--border-color);
-         width: 250px;
-         padding: 2rem 1.5rem;
-         display: flex;
-         flex-direction: column;
-       }
-
-       .app-logo {
-         display: flex;
-         align-items: center;
-         font-size: 1.5rem;
-         font-weight: 600;
-         gap: 0.5rem;
-         margin-bottom: 2rem;
-         color: var(--text-primary);
-       }
-
-       .nav-item {
-         display: flex;
-         align-items: center;
-         gap: 0.75rem;
-         padding: 0.75rem 1rem;
-         font-size: 1rem;
-         border-radius: var(--radius);
-         transition: background var(--transition-speed);
-         margin-bottom: 0.5rem;
-       }
-
-       .nav-item i {
-         font-size: 1.25rem;
-       }
-
-       .nav-item:hover {
-         background: var(--hover-bg);
-       }
-
-       .nav-item.active {
-         background: var(--primary);
-         color: #fff;
-       }
-
-
-        /* Main Content */
-        .main-content {
-            padding: 2rem;
+        :root {
+            --primary: #28a745;
+            --primary-light: #e8f5e9;
+            --secondary: #f8f9fa;
+            --success: #2ecc71;
+            --danger: #dc3545;
+            --warning: #ffc107;
+            --text: #2c3e50;
+            --text-light: #6c757d;
+            --border: #dee2e6;
+            --shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
 
-        /* Header */
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 2rem;
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
 
-        .search-bar {
+        body {
+            background: var(--secondary);
+            color: var(--text);
+        }
+
+        .app-container {
+            display: grid;
+            grid-template-columns: 250px 1fr;
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            background: white;
+            padding: 20px;
+            box-shadow: var(--shadow);
+        }
+
+        .app-logo {
             display: flex;
             align-items: center;
-            background: var(--card-bg);
+            gap: 10px;
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--primary);
+            margin-bottom: 30px;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 15px;
+            color: var(--text);
+            text-decoration: none;
             border-radius: 8px;
-            padding: 0.5rem 1rem;
-            width: 400px;
-            border: 1px solid var(--border-color);
+            margin-bottom: 5px;
+            transition: all 0.3s ease;
         }
 
-        .search-bar input {
-            border: none;
-            outline: none;
-            width: 100%;
-            margin-left: 8px;
-            font-size: 0.95rem;
+        .nav-item:hover {
+            background: var(--primary-light);
         }
 
-        .header-actions {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
+        .nav-item.active {
+            background: var(--primary);
+            color: white;
         }
 
-        /* Stats Grid */
+        .main-content {
+            padding: 20px;
+        }
+
+        .dashboard-header {
+            margin-bottom: 30px;
+        }
+
         .stats-grid {
             display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 1.5rem;
-            margin-bottom: 2rem;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
         }
 
         .stat-card {
-            background: var(--card-bg);
-            padding: 1.25rem;
-            border-radius: var(--radius);
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
             box-shadow: var(--shadow);
+            position: relative;
+            border-left: 4px solid var(--primary);
         }
 
-        .stat-value {
-            font-size: 1.75rem;
-            font-weight: 600;
-            margin-bottom: 0.5rem;
+        .stat-card h3 {
+            color: var(--text-light);
+            font-size: 0.9rem;
+            margin-bottom: 10px;
         }
 
-        .stat-label {
-            color: var(--text-secondary);
-            font-size: 0.875rem;
-        }
-
-        .stat-trend {
-            display: inline-block;
-            padding: 0.25rem 0.5rem;
-            border-radius: 1rem;
-            font-size: 0.75rem;
-            margin-left: 0.5rem;
-        }
-
-        .trend-up { background: #E8F5E9; color: var(--success); }
-        .trend-down { background: #FFEBEE; color: var(--danger); }
-
-        /* Charts */
-        .charts-section {
-            display: grid;
-            grid-template-columns: 2fr 1fr;
-            gap: 1.5rem;
-            margin-bottom: 2rem;
-        }
-
-        .chart-container {
-            background: var(--card-bg);
-            padding: 1.5rem;
-            border-radius: var(--radius);
-            box-shadow: var(--shadow);
-        }
-
-        /* Tables */
-        .table-container {
-            background: var(--card-bg);
-            border-radius: var(--radius);
-            padding: 1.5rem;
-            box-shadow: var(--shadow);
-            margin-bottom: 1.5rem;
-        }
-
-        .table-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 1rem;
-        }
-
-        .table-title {
-            font-size: 1.125rem;
-            font-weight: 600;
-        }
-
-        .data-table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
-        .data-table th,
-        .data-table td {
-            padding: 1rem;
-            text-align: left;
-            border-bottom: 1px solid var(--border-color);
-        }
-
-        .data-table th {
-            font-weight: 500;
-            color: var(--text-secondary);
-        }
-
-        .status-badge {
-            padding: 0.25rem 0.75rem;
-            border-radius: 1rem;
-            font-size: 0.875rem;
-        }
-
-        .status-available {
-            background: #E8F5E9;
-            color: var(--success);
-        }
-
-        /* View All Link */
-        .view-all {
+        .stat-card .value {
+            font-size: 2rem;
+            font-weight: bold;
             color: var(--primary);
-            text-decoration: none;
-            font-size: 0.875rem;
+        }
+
+        .stat-card .icon {
+            font-size: 2.5rem;
+            color: var(--primary-light);
+            position: absolute;
+            right: 20px;
+            top: 20px;
+        }
+
+        .recent-activity {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: var(--shadow);
+            border-left: 4px solid var(--primary);
+        }
+
+        .activity-list {
+            list-style: none;
+        }
+
+        .activity-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 15px 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .activity-item:last-child {
+            border-bottom: none;
+        }
+
+        .activity-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+        }
+
+        .activity-icon.book {
+            background: var(--primary);
+        }
+
+        .activity-icon.user {
+            background: var(--success);
+        }
+
+        .activity-icon.fine {
+            background: var(--danger);
+        }
+
+        .activity-icon.reservation {
+            background: var(--warning);
+        }
+
+        .activity-details {
+            flex: 1;
+        }
+
+        .activity-title {
             font-weight: 500;
+            margin-bottom: 5px;
         }
 
-        /* Responsive Design */
-        @media (max-width: 1200px) {
-            .stats-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-
-            .charts-section {
-                grid-template-columns: 1fr;
-            }
+        .activity-time {
+            font-size: 0.8rem;
+            color: var(--text-light);
         }
 
-        @media (max-width: 768px) {
-            .app-container {
-                grid-template-columns: 1fr;
-            }
+        .quick-actions {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
 
-            .sidebar {
-                display: none;
-            }
+        .action-card {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: var(--shadow);
+            text-align: center;
+            text-decoration: none;
+            color: var(--text);
+            transition: transform 0.3s ease;
+            border-left: 4px solid var(--primary);
+        }
 
-            .search-bar {
-                width: 100%;
-                max-width: 300px;
-            }
+        .action-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .action-card i {
+            font-size: 2rem;
+            color: var(--primary);
+            margin-bottom: 10px;
+        }
+
+        .action-card h3 {
+            margin-bottom: 5px;
+        }
+
+        .action-card p {
+            color: var(--text-light);
+            font-size: 0.9rem;
         }
     </style>
 </head>
 <body>
     <div class="app-container">
+        <!-- Sidebar -->
         <aside class="sidebar">
-          <div class="app-logo">
-            <i class="fas fa-book"></i> KitabZone
-          </div>
-          <nav>
-            <a href="${pageContext.request.contextPath}/admin/adminDashboard" class="nav-item active"><i class="fas fa-th-large"></i> Dashboard</a>
-            <a href="${pageContext.request.contextPath}/admin/member" class="nav-item"><i class="fas fa-users"></i> Member</a>
-            <a href="${pageContext.request.contextPath}/admin/books" class="nav-item "><i class="fas fa-list"></i> Book</a>
-
-            <a href="${pageContext.request.contextPath}/admin/transactionControl" class="nav-item "><i class="fas fa-tasks"></i> Transaction Control</a>
-            <a href="${pageContext.request.contextPath}/admin/reservationManagement" class="nav-item"><i class="fas fa-calendar-check"></i> Reservation Management</a>
-            <a  href="${pageContext.request.contextPath}/admin/fineManagement" class="nav-item"><i class="fas fa-hand-holding-usd"></i> Fine Administration</a>
-
-
-
-
-          </nav>
+            <div class="app-logo">
+                <i class="fas fa-book"></i> KitabZone
+            </div>
+            <nav>
+                <a href="${pageContext.request.contextPath}/admin/adminDashboard" class="nav-item active"><i class="fas fa-th-large"></i> Dashboard</a>
+                <a href="${pageContext.request.contextPath}/admin/member" class="nav-item"><i class="fas fa-users"></i> Member</a>
+                <a href="${pageContext.request.contextPath}/admin/books" class="nav-item"><i class="fas fa-list"></i> Book</a>
+                <a href="${pageContext.request.contextPath}/admin/transactionControl" class="nav-item"><i class="fas fa-tasks"></i> Transaction Control</a>
+                <a href="${pageContext.request.contextPath}/admin/reservationManagement" class="nav-item"><i class="fas fa-calendar-check"></i> Reservation Management</a>
+                <a href="${pageContext.request.contextPath}/admin/fineManagement" class="nav-item"><i class="fas fa-hand-holding-usd"></i> Fine Administration</a>
+            </nav>
         </aside>
+
         <!-- Main Content -->
         <main class="main-content">
-            <!-- Header -->
-            <div class="header">
-                <div class="search-bar">
-                    <i class="fas fa-search"></i>
-                    <input type="text" placeholder="Search Ex. ISBN, Title, Author, Member, etc">
-                </div>
-                <div class="header-actions">
-                    <div class="date-filter">
-                        Last 6 months
-                        <i class="fas fa-chevron-down"></i>
-                    </div>
-                    <i class="fas fa-bell"></i>
-                    <img src="https://via.placeholder.com/32" alt="Profile" style="border-radius: 50%;">
-                </div>
+            <div class="dashboard-header">
+                <h1>Admin Dashboard</h1>
             </div>
 
-            <!-- Statistics Cards -->
+            <!-- Statistics -->
             <div class="stats-grid">
                 <div class="stat-card">
-                    <div class="stat-value">
-                        2405
-                        <span class="stat-trend trend-up">+23%</span>
-                    </div>
-                    <div class="stat-label">Borrowed Books</div>
+                    <i class="fas fa-users icon"></i>
+                    <h3>Total Members</h3>
+                    <div class="value">${totalMembers != null ? totalMembers : 0}</div>
                 </div>
                 <div class="stat-card">
-                    <div class="stat-value">
-                        783
-                        <span class="stat-trend trend-down">-14%</span>
-                    </div>
-                    <div class="stat-label">Returned Books</div>
+                    <i class="fas fa-book icon"></i>
+                    <h3>Total Books</h3>
+                    <div class="value">${totalBooks != null ? totalBooks : 0}</div>
                 </div>
                 <div class="stat-card">
-                    <div class="stat-value">
-                        45
-                        <span class="stat-trend trend-up">+11%</span>
-                    </div>
-                    <div class="stat-label">Overdue Books</div>
+                    <i class="fas fa-calendar-check icon"></i>
+                    <h3>Active Reservations</h3>
+                    <div class="value">${activeReservations != null ? activeReservations : 0}</div>
                 </div>
                 <div class="stat-card">
-                    <div class="stat-value">
-                        12
-                        <span class="stat-trend trend-up">+11%</span>
-                    </div>
-                    <div class="stat-label">Missing Books</div>
+                    <i class="fas fa-hand-holding-usd icon"></i>
+                    <h3>Pending Fines</h3>
+                    <div class="value">$${pendingFines != null ? pendingFines : 0}</div>
                 </div>
             </div>
 
-            <!-- Second Row Stats -->
-            <div class="stats-grid">
-                <div class="stat-card">
-                    <div class="stat-value">32345</div>
-                    <div class="stat-label">Total Books</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-value">1504</div>
-                    <div class="stat-label">Visitors</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-value">34</div>
-                    <div class="stat-label">New Members</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-value">$765</div>
-                    <div class="stat-label">Pending Fees</div>
-                </div>
+            <!-- Recent Activity -->
+            <div class="recent-activity">
+                <h2>Recent Activity</h2>
+                <ul class="activity-list">
+                    <c:if test="${empty recentActivities}">
+                        <li class="activity-item">
+                            <div class="activity-details">
+                                <div class="activity-title">No recent activities</div>
+                            </div>
+                        </li>
+                    </c:if>
+                    <c:forEach items="${recentActivities}" var="activity">
+                        <li class="activity-item">
+                            <div class="activity-icon ${activity.type}">
+                                <i class="fas fa-${activity.icon}"></i>
+                            </div>
+                            <div class="activity-details">
+                                <div class="activity-title">${activity.title}</div>
+                                <div class="activity-time">${activity.time}</div>
+                            </div>
+                        </li>
+                    </c:forEach>
+                </ul>
             </div>
 
-            <!-- Charts Section -->
-            <div class="charts-section">
-                <div class="chart-container">
-                    <h3>Check-out Statistics</h3>
-                    <canvas id="checkoutChart"></canvas>
-                </div>
-                <div class="chart-container">
-                    <h3>Overdue's History</h3>
-                    <table class="data-table">
-                        <thead>
-                            <tr>
-                                <th>Member ID</th>
-                                <th>Title</th>
-                                <th>Due Date</th>
-                                <th>Fine</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <!-- Add table rows here -->
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-
-            <!-- Recent Check-outs Table -->
-            <div class="table-container">
-                <div class="table-header">
-                    <h3 class="table-title">Recent Check-out's</h3>
-                    <a href="#" class="view-all">View All</a>
-                </div>
-                <table class="data-table">
-                    <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>ISBN</th>
-                            <th>Title</th>
-                            <th>Author</th>
-                            <th>Member</th>
-                            <th>Issued Date</th>
-                            <th>Return Date</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <!-- Add table rows here -->
-                    </tbody>
-                </table>
+            <!-- Quick Actions -->
+            <div class="quick-actions">
+                <a href="${pageContext.request.contextPath}/admin/books" class="action-card">
+                    <i class="fas fa-plus-circle"></i>
+                    <h3>Add New Book</h3>
+                    <p>Add a new book to the library collection</p>
+                </a>
+                <a href="${pageContext.request.contextPath}/admin/member" class="action-card">
+                    <i class="fas fa-user-plus"></i>
+                    <h3>Add New Member</h3>
+                    <p>Register a new library member</p>
+                </a>
+                <a href="${pageContext.request.contextPath}/admin/transactionControl" class="action-card">
+                    <i class="fas fa-exchange-alt"></i>
+                    <h3>Process Transaction</h3>
+                    <p>Handle book borrowings and returns</p>
+                </a>
+                <a href="${pageContext.request.contextPath}/admin/fineManagement" class="action-card">
+                    <i class="fas fa-money-bill-wave"></i>
+                    <h3>Manage Fines</h3>
+                    <p>View and process pending fines</p>
+                </a>
             </div>
         </main>
     </div>
-
-    <script>
-        // Initialize Charts
-        const ctx = document.getElementById('checkoutChart').getContext('2d');
-        new Chart(ctx, {
-            type: 'line',
-            data: {
-                labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
-                datasets: [{
-                    label: 'Borrowed',
-                    data: [3000, 3500, 3200, 3700, 2500, 3200, 3400],
-                    borderColor: '#4CAF50',
-                    tension: 0.4
-                },
-                {
-                    label: 'Returned',
-                    data: [2000, 2800, 3900, 3600, 3800, 3000, 2500],
-                    borderColor: '#FF5252',
-                    tension: 0.4
-                }]
-            },
-            options: {
-                responsive: true,
-                plugins: {
-                    legend: {
-                        position: 'top',
-                    }
-                },
-                scales: {
-                    y: {
-                        beginAtZero: true
-                    }
-                }
-            }
-        });
-    </script>
 </body>
 </html>

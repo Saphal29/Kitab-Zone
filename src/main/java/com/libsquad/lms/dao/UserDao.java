@@ -204,4 +204,16 @@ public class UserDao {
                 rs.getObject("updated_at", LocalDateTime.class)
         );
     }
+
+    public int getTotalMembers() throws SQLException {
+        String sql = "SELECT COUNT(*) FROM users WHERE role != 'ADMIN' AND role != 'SUPER_ADMIN'";
+        try (Connection conn = DatabaseConnectionUtil.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql);
+             ResultSet rs = stmt.executeQuery()) {
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+            return 0;
+        }
+    }
 }

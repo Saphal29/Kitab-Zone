@@ -46,7 +46,7 @@ public class BorrowServlet extends HttpServlet {
                     user.getUserId(),
                     bookId,
                     Date.valueOf(borrowDate),
-                    Date.valueOf(borrowDate.plusDays(14)),
+                    Date.valueOf(borrowDate.plusDays(1)),
                     null,
                     "BORROWED"
             );

@@ -433,7 +433,7 @@
                        <div class="header-actions">
                            <div class="global-search">
                                <i class="fas fa-search"></i>
-                               <input type="text" placeholder="Search books...">
+                               <input type="text" id="searchInput" placeholder="Search by title, author, ISBN, or genre...">
                            </div>
                            <button id="addBookBtn" class="btn btn-primary">
                                <i class="fas fa-plus"></i> Add Book
@@ -742,6 +742,19 @@
                       reader.readAsDataURL(file);
                   }
               }
+
+                // Search functionality
+                document.getElementById('searchInput').addEventListener('input', function(e) {
+                    const searchTerm = e.target.value.toLowerCase();
+                    const rows = document.querySelectorAll('.table-container tbody tr');
+
+                    rows.forEach(row => {
+                        if (row.querySelector('td[colspan]')) return;
+
+                        const text = row.textContent.toLowerCase();
+                        row.style.display = text.includes(searchTerm) ? '' : 'none';
+                    });
+                });
 
                 </script>
 </body>

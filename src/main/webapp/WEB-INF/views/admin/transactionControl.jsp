@@ -1,4 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -9,15 +11,14 @@
     /* Root Variables */
     :root {
       --primary: #4CAF50;
-      --background: #F8F9FA;
-      --card-bg: #FFFFFF;
-      --text-primary: #2D3436;
-      --text-secondary: #636E72;
-      --border-color: #E9ECEF;
-      --hover-bg: #F1F4F6;
-      --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-      --radius: 12px;
-      --transition-speed: 0.3s;
+      --primary-dark: #388E3C;
+      --background: #FFFFFF;
+      --text-primary: #333333;
+      --text-secondary: #666666;
+      --border-color: #EEEEEE;
+      --hover-bg: #F8F9FA;
+      --radius: 8px;
+      --shadow: 0 2px 10px rgba(0,0,0,0.1);
     }
 
     /* Reset & Base */
@@ -25,12 +26,11 @@
       margin: 0;
       padding: 0;
       box-sizing: border-box;
-      font-family: 'Segoe UI', Roboto, sans-serif;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     }
 
     body {
       background: var(--background);
-      color: var(--text-primary);
     }
 
     a {
@@ -40,19 +40,17 @@
 
     /* Layout */
     .app-container {
-      display: flex;
-      height: 100vh;
-      overflow: hidden;
+      display: grid;
+      grid-template-columns: 240px 1fr;
+      min-height: 100vh;
     }
 
     /* Sidebar */
     .sidebar {
-      background: var(--card-bg);
+      background: var(--background);
+      padding: 1.5rem;
       border-right: 1px solid var(--border-color);
-      width: 250px;
-      padding: 2rem 1.5rem;
-      display: flex;
-      flex-direction: column;
+      height: 100vh;
     }
 
     .app-logo {
@@ -68,111 +66,129 @@
     .nav-item {
       display: flex;
       align-items: center;
-      gap: 0.75rem;
       padding: 0.75rem 1rem;
-      font-size: 1rem;
+      color: var(--text-secondary);
+      text-decoration: none;
       border-radius: var(--radius);
-      transition: background var(--transition-speed);
       margin-bottom: 0.5rem;
-    }
-
-    .nav-item i {
-      font-size: 1.25rem;
-    }
-
-    .nav-item:hover {
-      background: var(--hover-bg);
+      font-size: 0.875rem;
     }
 
     .nav-item.active {
       background: var(--primary);
-      color: #fff;
+      color: white;
+    }
+
+    .nav-item i {
+      margin-right: 0.75rem;
+      width: 20px;
     }
 
     /* Main Content */
     .main-content {
-      flex: 1;
       padding: 2rem;
-      overflow-y: auto;
     }
 
-    .header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 2rem;
+    .page-header {
+      margin-bottom: 1.5rem;
     }
 
-    .global-search {
+    .page-title {
+      font-size: 1.25rem;
+      font-weight: 500;
+      margin-bottom: 0.25rem;
+    }
+
+    .page-subtitle {
+      color: var(--text-secondary);
+      font-size: 0.875rem;
+    }
+
+    /* Search Bar */
+    .search-bar {
       display: flex;
       align-items: center;
-      padding: 0.5rem 1rem;
-      background: var(--card-bg);
+      background: var(--background);
       border: 1px solid var(--border-color);
       border-radius: var(--radius);
-      width: 100%;
-      max-width: 400px;
+      padding: 0.5rem 1rem;
+      width: 300px;
+      margin-bottom: 1.5rem;
     }
 
-    .global-search input {
+    .search-bar input {
       border: none;
       outline: none;
-      font-size: 1rem;
-      flex: 1;
-      margin-left: 0.75rem;
+      width: 100%;
+      margin-left: 0.5rem;
     }
 
-    /* Transaction Control */
-    .card {
-      background: var(--card-bg);
+    /* Transactions Table */
+    .transactions-table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      background: var(--background);
       border-radius: var(--radius);
+      overflow: hidden;
       box-shadow: var(--shadow);
-      padding: 1.5rem;
-      margin-bottom: 1.5rem;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      transition: box-shadow var(--transition-speed);
     }
 
-    .card:hover {
-      box-shadow: 0 6px 8px rgba(0, 0, 0, 0.1);
+    .transactions-table th {
+      text-align: left;
+      padding: 1rem;
+      color: var(--text-secondary);
+      font-weight: 500;
+      font-size: 0.875rem;
+      border-bottom: 1px solid var(--border-color);
+      background: var(--hover-bg);
     }
 
-    .card i {
-      font-size: 2rem;
-      color: var(--primary);
+    .transactions-table td {
+      padding: 1rem;
+      font-size: 0.875rem;
+      border-bottom: 1px solid var(--border-color);
     }
 
-    .card-content {
-      flex: 1;
-      margin-left: 1rem;
+    .transactions-table tr:hover {
+      background: var(--hover-bg);
     }
 
-    .card-title {
-      font-size: 1.25rem;
-      font-weight: 600;
-      margin-bottom: 0.5rem;
+    /* Status Badge */
+    .status-badge {
+      display: inline-block;
+      padding: 0.25rem 0.75rem;
+      border-radius: 20px;
+      font-size: 0.75rem;
+      font-weight: 500;
     }
 
-    .card-subtitle {
-      font-size: 0.95rem;
+    .status-borrowed {
+      background: #E3F2FD;
+      color: #1565C0;
+    }
+
+    .status-returned {
+      background: #E8F5E9;
+      color: #2E7D32;
+    }
+
+    .status-overdue {
+      background: #FFEBEE;
+      color: #C62828;
+    }
+
+    /* Empty State */
+    .empty-state {
+      text-align: center;
+      padding: 3rem;
       color: var(--text-secondary);
     }
 
-    .card-action {
-      padding: 0.5rem 1rem;
-      background: var(--primary);
-      color: #fff;
-      font-size: 0.9rem;
-      border-radius: var(--radius);
-      cursor: pointer;
-      border: none;
-      transition: background var(--transition-speed);
-    }
-
-    .card-action:hover {
-      background: #43A047;
+    .empty-state i {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+      color: var(--border-color);
     }
   </style>
 </head>
@@ -186,81 +202,95 @@
       <nav>
         <a href="${pageContext.request.contextPath}/admin/adminDashboard" class="nav-item"><i class="fas fa-th-large"></i> Dashboard</a>
         <a href="${pageContext.request.contextPath}/admin/member" class="nav-item"><i class="fas fa-users"></i> Member</a>
-         <a href="${pageContext.request.contextPath}/admin/books" class="nav-item"><i class="fas fa-list"></i> Book</a>
+        <a href="${pageContext.request.contextPath}/admin/books" class="nav-item"><i class="fas fa-list"></i> Book</a>
         <a href="${pageContext.request.contextPath}/admin/transactionControl" class="nav-item active"><i class="fas fa-tasks"></i> Transaction Control</a>
         <a href="${pageContext.request.contextPath}/admin/reservationManagement" class="nav-item"><i class="fas fa-calendar-check"></i> Reservation Management</a>
-        <a  href="${pageContext.request.contextPath}/admin/fineManagement" class="nav-item"><i class="fas fa-hand-holding-usd"></i> Fine Administration</a>
-
-
-
-
+        <a href="${pageContext.request.contextPath}/admin/fineManagement" class="nav-item"><i class="fas fa-hand-holding-usd"></i> Fine Administration</a>
       </nav>
     </aside>
 
     <!-- Main Content -->
     <main class="main-content">
-      <div class="header">
-        <div class="global-search">
-          <i class="fas fa-search"></i>
-          <input type="text" placeholder="Search Transactions" />
-        </div>
+      <div class="page-header">
+        <h1 class="page-title">Transaction Control</h1>
+        <p class="page-subtitle">View and manage all book transactions</p>
       </div>
 
-      <!-- Cards Section -->
-      <div class="card">
-        <i class="fas fa-check-circle"></i>
-        <div class="card-content">
-          <h2 class="card-title">Approve/Reject Book Requests</h2>
-          <p class="card-subtitle">Review and handle all book issue requests.</p>
-        </div>
-        <button class="card-action">Manage</button>
+      <div class="search-bar">
+        <i class="fas fa-search"></i>
+        <input type="text" placeholder="Search transactions..." id="transactionSearch">
       </div>
 
-      <div class="card">
-        <i class="fas fa-calendar-alt"></i>
-        <div class="card-content">
-          <h2 class="card-title">Set/Modify Due Dates</h2>
-          <p class="card-subtitle">Adjust due dates for borrowed books.</p>
-        </div>
-        <button class="card-action">Adjust</button>
-      </div>
-
-      <div class="card">
-        <i class="fas fa-sync-alt"></i>
-        <div class="card-content">
-          <h2 class="card-title">Process Book Returns</h2>
-          <p class="card-subtitle">Record and track book return details.</p>
-        </div>
-        <button class="card-action">Process</button>
-      </div>
-
-      <div class="card">
-        <i class="fas fa-clock"></i>
-        <div class="card-content">
-          <h2 class="card-title">Handle Book Renewals</h2>
-          <p class="card-subtitle">Allow members to renew borrowed books.</p>
-        </div>
-        <button class="card-action">Renew</button>
-      </div>
-
-      <div class="card">
-        <i class="fas fa-exclamation-circle"></i>
-        <div class="card-content">
-          <h2 class="card-title">Mark Books as Overdue</h2>
-          <p class="card-subtitle">Identify and handle overdue books.</p>
-        </div>
-        <button class="card-action">Update</button>
-      </div>
-
-      <div class="card">
-        <i class="fas fa-chart-line"></i>
-        <div class="card-content">
-          <h2 class="card-title">Track Borrowing History</h2>
-          <p class="card-subtitle">View and analyze past transactions.</p>
-        </div>
-        <button class="card-action">View</button>
-      </div>
+      <table class="transactions-table">
+        <thead>
+          <tr>
+            <th>Transaction ID</th>
+            <th>Book Title</th>
+            <th>Member</th>
+            <th>Borrow Date</th>
+            <th>Due Date</th>
+            <th>Return Date</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <c:choose>
+            <c:when test="${not empty transactions}">
+              <c:forEach var="transaction" items="${transactions}">
+                <tr>
+                  <td>#${transaction.id}</td>
+                  <td>${transaction.bookTitle}</td>
+                  <td>${transaction.userName}</td>
+                  <td><fmt:formatDate value="${transaction.borrowDate}" pattern="MMM dd, yyyy"/></td>
+                  <td><fmt:formatDate value="${transaction.dueDate}" pattern="MMM dd, yyyy"/></td>
+                  <td>
+                    <c:choose>
+                      <c:when test="${not empty transaction.returnDate}">
+                        <fmt:formatDate value="${transaction.returnDate}" pattern="MMM dd, yyyy"/>
+                      </c:when>
+                      <c:otherwise>
+                        -
+                      </c:otherwise>
+                    </c:choose>
+                  </td>
+                  <td>
+                    <span class="status-badge status-${transaction.status.toLowerCase()}">
+                      ${transaction.status}
+                    </span>
+                  </td>
+                </tr>
+              </c:forEach>
+            </c:when>
+            <c:otherwise>
+              <tr>
+                <td colspan="7">
+                  <div class="empty-state">
+                    <i class="fas fa-book"></i>
+                    <h3>No Transactions Found</h3>
+                    <p>There are no transactions to display at the moment.</p>
+                  </div>
+                </td>
+              </tr>
+            </c:otherwise>
+          </c:choose>
+        </tbody>
+      </table>
     </main>
   </div>
+
+  <script>
+    // Search functionality
+    document.getElementById('transactionSearch').addEventListener('input', function(e) {
+      const searchTerm = e.target.value.toLowerCase();
+      const rows = document.querySelectorAll('.transactions-table tbody tr');
+
+      rows.forEach(row => {
+        if (row.querySelector('td[colspan]')) return;
+
+        const text = row.textContent.toLowerCase();
+        row.style.display = text.includes(searchTerm) ? '' : 'none';
+      });
+    });
+  </script>
 </body>
 </html>

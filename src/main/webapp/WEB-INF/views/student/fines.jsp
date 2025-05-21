@@ -1,20 +1,16 @@
-<%@ page contentType="text/html;charset=UTF-8" %>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Student Portal</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-        }
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib prefix="c" uri="jakarta.tags.core" %>
+<%@ taglib prefix="fmt" uri="jakarta.tags.fmt" %>
 
+<!DOCTYPE html>
+<html>
+<head>
+    <title>My Fines</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
         :root {
             --primary: #4CAF50;
+            --primary-dark: #3e8e41;
             --background: #F8F9FA;
             --card-bg: #FFFFFF;
             --text-primary: #2D3436;
@@ -23,432 +19,322 @@
             --hover-bg: #F1F4F6;
             --shadow: 0 2px 4px rgba(0,0,0,0.05);
             --radius: 8px;
-            --danger: #DC3545;
+            --error: #DC3545;
             --warning: #FFC107;
             --success: #28A745;
         }
 
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Roboto, sans-serif;
+        }
+
         body {
-            background-color: var(--background);
-        }
-
-        .app-container {
+            background: var(--background);
             display: flex;
+            min-height: 100vh;
         }
-
-        .sidebar {
-            background: #ffffff;  /* White background */
-            padding: 1.5rem;
-            border-right: 1px solid #E9ECEF;
-            height: 100vh;
-            position: fixed;
-            width: 250px;
+.sidebar {
+            background: white;
+            padding: 20px;
+            box-shadow: var(--shadow);
         }
 
         .app-logo {
             display: flex;
             align-items: center;
-            gap: 0.75rem;
-            font-size: 1.25rem;
-            font-weight: 600;
-            margin-bottom: 2rem;
-            color: #2D3436;  /* Dark text */
-        }
-
-        .app-logo i {
-            color: #4CAF50;  /* Green icon */
+            gap: 10px;
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--primary);
+            margin-bottom: 30px;
         }
 
         .nav-item {
             display: flex;
             align-items: center;
-            padding: 0.875rem 1rem;
-            color: #636E72;  /* Gray text */
+            gap: 10px;
+            padding: 12px 15px;
+            color: var(--text);
             text-decoration: none;
             border-radius: 8px;
-            transition: all 0.2s;
-        }
-
-        .nav-item i {
-            width: 20px;
-            margin-right: 0.75rem;
+            margin-bottom: 5px;
+            transition: all 0.3s ease;
         }
 
         .nav-item:hover {
-            background: #F1F4F6;  /* Light gray background on hover */
-            color: #2D3436;  /* Darker text on hover */
+            background: var(--primary-light);
         }
 
         .nav-item.active {
-            background: #4CAF50;  /* Green background for active */
-            color: white;  /* White text for active */
-        }
-
-        .main-content {
-            margin-left: 250px;
-            padding: 20px;
-            width: calc(100% - 250px);
-        }
-
-        .header {
-            margin-bottom: 20px;
-        }
-
-        .page-title {
-            font-size: 28px;
-            margin: 0;
-        }
-
-        .summary-cards {
-            display: flex;
-            gap: 20px;
-            margin-bottom: 20px;
-        }
-
-        .summary-card {
-            background-color: var(--card-bg);
-            padding: 20px;
-            border-radius: var(--radius);
-            box-shadow: var(--shadow);
-            flex: 1;
-        }
-
-        .summary-title {
-            font-size: 16px;
-            color: var(--text-secondary);
-        }
-
-        .summary-value {
-            font-size: 24px;
-            margin: 10px 0;
-            color: var(--text-primary);
-        }
-
-        .summary-trend {
-            display: flex;
-            align-items: center;
-            font-size: 14px;
-            color: var(--text-secondary);
-        }
-
-        .summary-trend i {
-            margin-right: 5px;
-        }
-
-        .fine-details {
-            display: grid;
-            grid-template-columns: 2fr 1fr;
-            gap: 1.5rem;
-            margin-bottom: 4rem;
-        }
-
-        .fine-list, .payment-section {
-            background-color: var(--card-bg);
-            padding: 20px;
-            border-radius: var(--radius);
-            box-shadow: var(--shadow);
-            flex: 1;
-        }
-
-        .fine-item {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 20px;
-        }
-
-        .fine-book {
-            display: flex;
-        }
-
-        .book-cover img {
-            width: 60px;
-            height: 90px;
-            object-fit: cover;
-            border-radius: var(--radius);
-            margin-right: 10px;
-        }
-
-        .book-info h4 {
-            margin: 0;
-            font-size: 16px;
-            color: var(--text-primary);
-        }
-
-        .book-info p {
-            margin: 5px 0;
-            font-size: 14px;
-            color: var(--text-secondary);
-        }
-
-        .fine-amount {
-            font-size: 18px;
-            color: var(--danger);
-        }
-
-        .payment-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-
-        .payment-total {
-            font-size: 24px;
-            color: var(--primary);
-        }
-
-        .btn {
-            display: inline-flex;
-            align-items: center;
-            padding: 10px 20px;
-            border: none;
-            border-radius: var(--radius);
-            cursor: pointer;
-            transition: background 0.3s;
-        }
-
-        .btn-primary {
-            background-color: var(--primary);
+            background: var(--primary);
             color: white;
         }
 
-        .btn-outline {
-            background-color: transparent;
-            color: var(--primary);
-            border: 1px solid var(--primary);
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            padding: 2rem;
+            overflow-y: auto;
         }
 
-        .btn i {
-            margin-right: 5px;
-        }
-
-        .calculator, .receipt {
-            margin-top: 20px;
-        }
-
-        .input-group {
-            margin-bottom: 10px;
-        }
-
-        .input-group label {
-            display: block;
-            margin-bottom: 5px;
-            font-size: 14px;
-            color: var(--text-secondary);
-        }
-
-        .input-group input {
-            width: 100%;
-            padding: 8px;
-            border: 1px solid var(--border-color);
-            border-radius: var(--radius);
-        }
-
-        .receipt-header h3, .calculator h3 {
-            margin: 0 0 10px 0;
-            color: var(--text-primary);
-        }
-
-        .receipt-row {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 10px;
-            color: var(--text-secondary);
-        }
-
-        .charts-section {
-            background: var(--card-bg);
-            border-radius: var(--radius);
-            box-shadow: var(--shadow);
-            padding: 1.5rem;
-            margin-top: 2rem;
-        }
-
-        .chart-container {
-            background-color: var(--card-bg);
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: white;
             padding: 20px;
             border-radius: var(--radius);
             box-shadow: var(--shadow);
+        }
+
+        h1 {
+            color: var(--text-primary);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .message {
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: var(--radius);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        /* Fines Table */
+        .fines-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        .fines-table th,
+        .fines-table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .fines-table th {
+            background-color: var(--hover-bg);
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .fines-table tr:hover {
+            background-color: var(--hover-bg);
+        }
+
+        .status-badge {
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            font-weight: 500;
+            text-transform: uppercase;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .status-pending {
+            background-color: #fff3cd;
+            color: #856404;
+            border: 1px solid #ffeeba;
+        }
+
+        .status-paid {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .status-cancelled {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px;
+            color: var(--text-secondary);
+        }
+
+        .empty-state i {
+            font-size: 48px;
+            margin-bottom: 20px;
+            color: var(--border-color);
+        }
+
+        .total-fines {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: var(--hover-bg);
+            border-radius: var(--radius);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .total-fines .amount {
+            font-size: 1.2em;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 60px;
+                padding: 10px 0;
+            }
+
+            .app-logo span {
+                display: none;
+            }
+
+            .nav-item span {
+                display: none;
+            }
+
+            .main-content {
+                margin-left: 60px;
+            }
+
+            .container {
+                padding: 10px;
+            }
+
+            .fines-table {
+                display: block;
+                overflow-x: auto;
+            }
         }
     </style>
 </head>
 <body>
-    <div class="app-container">
-        <!-- This sidebar structure should be the same in all files -->
-<aside class="sidebar">
-  <div class="app-logo">
-      <i class="fas fa-book"></i>
-      KitabZone
-  </div>
-  <nav>
-      <a href="${pageContext.request.contextPath}/student/studentDashboard"class="nav-item">
-          <i class="fas fa-th-large"></i>
-          Dashboard
-      </a>
-       <a href="${pageContext.request.contextPath}/student/myBooks" class="nav-item">
-          <i class="fas fa-book"></i>
-          My Books
-      </a>
-       <a href="${pageContext.request.contextPath}/student/browseBooks" class="nav-item">
-          <i class="fas fa-search"></i>
-          Browse Books
-      </a>
-       <a href="${pageContext.request.contextPath}/student/reservation" class="nav-item">
-          <i class="fas fa-clock"></i>
-          Reservations
-      </a>
-      <a href="${pageContext.request.contextPath}/student/fines" class="nav-item active">
-          <i class="fas fa-dollar-sign"></i>
-          Fines & Payments
-      </a>
-      <a href="${pageContext.request.contextPath}/student/profile" class="nav-item">
-          <i class="fas fa-user"></i>
-          Profile
-      </a>
-  </nav>
-</aside>
-        <!-- Main Content -->
-        <main class="main-content">
-            <div class="header">
-                <h1 class="page-title">Fines & Payments</h1>
-            </div>
-
-            <!-- Summary Cards -->
-            <div class="summary-cards">
-                <div class="summary-card">
-                    <div class="summary-title">Total Outstanding</div>
-                    <div class="summary-value">$12.50</div>
-                    <div class="summary-trend">
-                        <i class="fas fa-arrow-up" style="color: var(--danger)"></i>
-                        <span>From 2 overdue books</span>
-                    </div>
-                </div>
-                <div class="summary-card">
-                    <div class="summary-title">Paid This Month</div>
-                    <div class="summary-value">$8.00</div>
-                    <div class="summary-trend">
-                        <i class="fas fa-check" style="color: var(--success)"></i>
-                        <span>3 payments</span>
-                    </div>
-                </div>
-                <div class="summary-card">
-                    <div class="summary-title">Pending Disputes</div>
-                    <div class="summary-value">1</div>
-                    <div class="summary-trend">
-                        <i class="fas fa-clock" style="color: var(--warning)"></i>
-                        <span>Under review</span>
-                    </div>
-                </div>
-                <div class="summary-card">
-                    <div class="summary-title">Account Status</div>
-                    <div class="summary-value" style="color: var(--warning)">Limited</div>
-                    <div class="summary-trend">
-                        <i class="fas fa-exclamation-triangle"></i>
-                        <span>Due to outstanding fines</span>
-                    </div>
-                </div>
-            </div>
-
-
-            <!-- Fine Details and Payment -->
-                        <div class="fine-details">
-                          <!-- Fine List -->
-                          <div class="fine-list">
-                              <div class="fine-item">
-                                  <div class="fine-book">
-                                      <div class="book-cover">
-                                          <img src="https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c" alt="Book Cover">
-                                      </div>
-                                      <div class="book-info">
-                                          <h4>The Design of Everyday Things</h4>
-                                          <p>Due: Oct 15, 2023</p>
-                                          <p>Days Overdue: 5</p>
-                                      </div>
-                                  </div>
-                                  <div class="fine-amount">$7.50</div>
-                              </div>
-                              <div class="fine-item">
-                                  <div class="fine-book">
-                                      <div class="book-cover">
-                                          <img src="https://images.unsplash.com/photo-1589829085413-56de8ae18c73" alt="Book Cover">
-                                      </div>
-                                      <div class="book-info">
-                                          <h4>Clean Code</h4>
-                                          <p>Due: Oct 18, 2023</p>
-                                          <p>Days Overdue: 2</p>
-                                      </div>
-                                  </div>
-                                  <div class="fine-amount">$5.00</div>
-                              </div>
-                          </div>
-
-                          <!-- Payment Section -->
-                          <div class="payment-section">
-                              <div class="payment-header">
-                                  <h3>Payment Summary</h3>
-                                  <div class="payment-total">$12.50</div>
-                              </div>
-                              <button class="btn btn-primary">
-                                  <i class="fas fa-credit-card"></i>
-                                  Pay Now
-                              </button>
-                              <button class="btn btn-outline">
-                                  <i class="fas fa-flag"></i>
-                                  Dispute Fine
-                              </button>
-
-                              <!-- Fine Calculator -->
-                              <div class="calculator">
-                                  <h3>Fine Calculator</h3>
-                                  <div class="calculator-input">
-                                      <div class="input-group">
-                                          <label>Days Overdue</label>
-                                          <input type="number" min="1" value="1">
-                                      </div>
-                                      <div class="input-group">
-                                          <label>Number of Books</label>
-                                          <input type="number" min="1" value="1">
-                                      </div>
-                                  </div>
-                                  <button class="btn btn-outline">Calculate Fine</button>
-                              </div>
-
-                              <!-- Latest Receipt -->
-                              <div class="receipt">
-                                  <div class="receipt-header">
-                                      <h3>Latest Payment Receipt</h3>
-                                      <p>Transaction ID: #LIB-2023-001</p>
-                                  </div>
-                                  <div class="receipt-details">
-                                      <div class="receipt-row">
-                                          <span>Date</span>
-                                          <span>Oct 10, 2023</span>
-                                      </div>
-                                      <div class="receipt-row">
-                                          <span>Amount Paid</span>
-                                          <span>$8.00</span>
-                                      </div>
-                                      <div class="receipt-row">
-                                          <span>Payment Method</span>
-                                          <span>Credit Card</span>
-                                      </div>
-                                  </div>
-                                  <button class="btn btn-outline">
-                                      <i class="fas fa-download"></i>
-                                      Download Receipt
-                                  </button>
-                              </div>
-                          </div>
-                      </div>
-
-                      <!-- Charts Section -->
-                      <div class="charts-section">
-                          <h3>Fine History</h3>
-                          <div class="chart-container">
-                              <canvas id="fineChart"></canvas>
-                          </div>
-                      </div>
-                  </main>
+    <!-- Sidebar Navigation -->
+  <aside class="sidebar">
+              <div class="app-logo">
+                  <i class="fas fa-book"></i> KitabZone
               </div>
-          </body>
-          </html>
+              <nav>
+                  <a href="${pageContext.request.contextPath}/student/studentDashboard" class="nav-item">
+                      <i class="fas fa-th-large"></i> Dashboard
+                  </a>
+                  <a href="${pageContext.request.contextPath}/student/browseBooks" class="nav-item">
+                      <i class="fas fa-book"></i> Browse Books
+                  </a>
+                  <a href="${pageContext.request.contextPath}/student/myBooks" class="nav-item">
+                      <i class="fas fa-book-reader"></i> My Books
+                  </a>
+                  <a href="${pageContext.request.contextPath}/student/reservation" class="nav-item ">
+                                            <i class="fas fa-book-reader"></i> My Reservations
+                                            </a>
+                  <a href="${pageContext.request.contextPath}/student/fines" class="nav-item active">
+                      <i class="fas fa-money-bill-wave"></i> My Fines
+                  </a>
+                  <a href="${pageContext.request.contextPath}/student/profile" class="nav-item ">
+                      <i class="fas fa-user"></i> Profile
+                  </a>
+              </nav>
+          </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="container">
+            <h1>
+                <i class="fas fa-dollar-sign"></i>
+                My Fines & Payments
+            </h1>
+
+            <c:if test="${not empty success}">
+                <div class="message success">
+                    <i class="fas fa-check-circle"></i>
+                    ${success}
+                </div>
+            </c:if>
+
+            <c:if test="${not empty error}">
+                <div class="message error">
+                    <i class="fas fa-exclamation-circle"></i>
+                    ${error}
+                </div>
+            </c:if>
+
+            <c:choose>
+                <c:when test="${empty fines}">
+                    <div class="empty-state">
+                        <i class="fas fa-check-circle"></i>
+                        <h3>No Fines Found</h3>
+                        <p>You don't have any fines at the moment.</p>
+                    </div>
+                </c:when>
+                <c:otherwise>
+                    <table class="fines-table">
+                        <thead>
+                            <tr>
+                                <th>Book</th>
+                                <th>Reason</th>
+                                <th>Amount</th>
+                                <th>Due Date</th>
+                                <th>Status</th>
+                                <th>Payment Details</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <c:forEach items="${fines}" var="fine">
+                                <tr>
+                                    <td>${fine.bookTitle}</td>
+                                    <td>${fine.reason}</td>
+                                    <td>$${fine.amount}</td>
+                                    <td><fmt:formatDate value="${fine.dueDate}" pattern="MMM dd, yyyy"/></td>
+                                    <td>
+                                        <span class="status-badge status-${fine.status.name().toLowerCase()}">
+                                            <i class="fas fa-circle"></i>
+                                            ${fine.status}
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <c:if test="${fine.status == 'PAID'}">
+                                            <div>
+                                                <small>Paid on: <fmt:formatDate value="${fine.paymentDate}" pattern="MMM dd, yyyy"/></small><br>
+                                                <small>Method: ${fine.paymentMethod}</small>
+                                            </div>
+                                        </c:if>
+                                    </td>
+                                </tr>
+                            </c:forEach>
+                        </tbody>
+                    </table>
+
+                    <div class="total-fines">
+                        <span>Total Pending Fines:</span>
+                        <span class="amount">
+                            $<fmt:formatNumber value="${totalPendingFines}" pattern="#,##0.00"/>
+                        </span>
+                    </div>
+                </c:otherwise>
+            </c:choose>
+        </div>
+    </main>
+</body>
+</html>

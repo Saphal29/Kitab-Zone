@@ -14,6 +14,7 @@ public class Transaction {
     private String bookTitle;
     private String bookAuthor;
     private String bookCoverImage;
+    private String userName;
 
     // No-arg constructor
     public Transaction() {
@@ -105,5 +106,8 @@ public class Transaction {
 
     public String getBookCoverImage() { return bookCoverImage; }
     public void setBookCoverImage(String bookCoverImage) { this.bookCoverImage = bookCoverImage; }
+
+    public String getUserName() { return userName; }
+    public void setUserName(String userName) { this.userName = userName; }
 
 }

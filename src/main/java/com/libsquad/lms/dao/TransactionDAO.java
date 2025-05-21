@@ -100,4 +100,35 @@ public class TransactionDAO {
         }
         throw new SQLException("Transaction not found with ID: " + transactionId);
     }
+
+    public List<Transaction> getAllTransactions() throws SQLException {
+        List<Transaction> list = new ArrayList<>();
+        String sql = "SELECT t.*, b.title AS book_title, b.author AS book_author, " +
+                "u.fullName AS user_name " +
+                "FROM transactions t " +
+                "JOIN books b ON t.book_id = b.book_id " +
+                "JOIN users u ON t.userId = u.userId " +
+                "ORDER BY t.borrow_date DESC";
+
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    Transaction tr = new Transaction(
+                            rs.getInt("id"),
+                            rs.getInt("userId"),
+                            rs.getInt("book_id"),
+                            rs.getDate("borrow_date"),
+                            rs.getDate("due_date"),
+                            rs.getDate("return_date"),
+                            rs.getString("status")
+                    );
+                    tr.setBookTitle(rs.getString("book_title"));
+                    tr.setBookAuthor(rs.getString("book_author"));
+                    tr.setUserName(rs.getString("user_name"));
+                    list.add(tr);
+                }
+            }
+        }
+        return list;
+    }
 }

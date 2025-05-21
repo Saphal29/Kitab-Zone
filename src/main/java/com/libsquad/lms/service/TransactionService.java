@@ -30,7 +30,7 @@ public class TransactionService {
 
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(todayUtil);
-        calendar.add(Calendar.DAY_OF_MONTH, 14); // 2 weeks due
+        calendar.add(Calendar.DAY_OF_MONTH, 1); // 1 day due
         Date dueDate = new Date(calendar.getTimeInMillis()); // convert to java.sql.Date
         transaction.setDueDate(dueDate);
 

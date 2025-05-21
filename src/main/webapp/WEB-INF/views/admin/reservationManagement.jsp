@@ -1,247 +1,447 @@
-<%@ page contentType="text/html;charset=UTF-8" %>
-<html lang="en">
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<!DOCTYPE html>
+<html>
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Library App - Reservation Management</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
-  <style>
-    /* Root Variables */
-    :root {
-      --primary: #4CAF50;
-      --background: #F8F9FA;
-      --card-bg: #FFFFFF;
-      --text-primary: #2D3436;
-      --text-secondary: #636E72;
-      --border-color: #E9ECEF;
-      --hover-bg: #F1F4F6;
-      --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-      --radius: 12px;
-      --transition-speed: 0.3s;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reservation Management - KitabZone</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #28a745;
+            --primary-light: #e8f5e9;
+            --secondary: #f8f9fa;
+            --success: #2ecc71;
+            --danger: #dc3545;
+            --warning: #ffc107;
+            --text: #2c3e50;
+            --text-light: #6c757d;
+            --border: #dee2e6;
+            --shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
 
-    /* Reset & Base */
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: 'Segoe UI', Roboto, sans-serif;
-    }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
 
-    body {
-      background: var(--background);
-      color: var(--text-primary);
-    }
+        body {
+            background: var(--secondary);
+            color: var(--text);
+        }
 
-    a {
-      text-decoration: none;
-      color: inherit;
-    }
+        .app-container {
+            display: grid;
+            grid-template-columns: 250px 1fr;
+            min-height: 100vh;
+        }
 
-    /* Layout */
-    .app-container {
-      display: flex;
-      height: 100vh;
-      overflow: hidden;
-    }
+        /* Sidebar Styles */
+        .sidebar {
+            background: white;
+            padding: 20px;
+            box-shadow: var(--shadow);
+        }
 
-    /* Sidebar */
-    .sidebar {
-      background: var(--card-bg);
-      border-right: 1px solid var(--border-color);
-      width: 250px;
-      padding: 2rem 1.5rem;
-      display: flex;
-      flex-direction: column;
-    }
+        .app-logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--primary);
+            margin-bottom: 30px;
+        }
 
-    .app-logo {
-      display: flex;
-      align-items: center;
-      font-size: 1.5rem;
-      font-weight: 600;
-      gap: 0.5rem;
-      margin-bottom: 2rem;
-      color: var(--text-primary);
-    }
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 15px;
+            color: var(--text);
+            text-decoration: none;
+            border-radius: 8px;
+            margin-bottom: 5px;
+            transition: all 0.3s ease;
+        }
 
-    .nav-item {
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-      padding: 0.75rem 1rem;
-      font-size: 1rem;
-      border-radius: var(--radius);
-      transition: background var(--transition-speed);
-      margin-bottom: 0.5rem;
-    }
+        .nav-item:hover {
+            background: var(--primary-light);
+        }
 
-    .nav-item i {
-      font-size: 1.25rem;
-    }
+        .nav-item.active {
+            background: var(--primary);
+            color: white;
+        }
 
-    .nav-item:hover {
-      background: var(--hover-bg);
-    }
+        .nav-item i {
+            color: var(--primary);
+            transition: color 0.3s ease;
+        }
 
-    .nav-item.active {
-      background: var(--primary);
-      color: #fff;
-    }
+        .nav-item.active i {
+            color: white;
+        }
 
-    /* Main Content */
-    .main-content {
-      flex: 1;
-      padding: 2rem;
-      overflow-y: auto;
-    }
+        /* Main Content Styles */
+        .main-content {
+            padding: 20px;
+        }
 
-    .header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 2rem;
-    }
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
 
-    .global-search {
-      display: flex;
-      align-items: center;
-      padding: 0.5rem 1rem;
-      background: var(--card-bg);
-      border: 1px solid var(--border-color);
-      border-radius: var(--radius);
-      width: 100%;
-      max-width: 400px;
-    }
+        .page-title {
+            font-size: 1.8rem;
+            color: var(--text);
+        }
 
-    .global-search input {
-      border: none;
-      outline: none;
-      font-size: 1rem;
-      flex: 1;
-      margin-left: 0.75rem;
-    }
+        .search-box {
+            display: flex;
+            gap: 10px;
+            background: white;
+            padding: 10px;
+            border-radius: 8px;
+            box-shadow: var(--shadow);
+        }
 
-    /* Reservation Management */
-    .card {
-      background: var(--card-bg);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-      padding: 1.5rem;
-      margin-bottom: 1.5rem;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      transition: box-shadow var(--transition-speed);
-    }
+        .search-box input {
+            border: none;
+            outline: none;
+            padding: 5px;
+            width: 300px;
+        }
 
-    .card:hover {
-      box-shadow: 0 6px 8px rgba(0, 0, 0, 0.1);
-    }
+        .search-box button {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 5px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
 
-    .card i {
-      font-size: 2rem;
-      color: var(--primary);
-    }
+        .search-box button:hover {
+            background: #218838;
+        }
 
-    .card-content {
-      flex: 1;
-      margin-left: 1rem;
-    }
+        /* Table Styles */
+        .reservations-table {
+            width: 100%;
+            background: white;
+            border-radius: 8px;
+            box-shadow: var(--shadow);
+            overflow: hidden;
+        }
 
-    .card-title {
-      font-size: 1.25rem;
-      font-weight: 600;
-      margin-bottom: 0.5rem;
-    }
+        .reservations-table table {
+            width: 100%;
+            border-collapse: collapse;
+        }
 
-    .card-subtitle {
-      font-size: 0.95rem;
-      color: var(--text-secondary);
-    }
+        .reservations-table th,
+        .reservations-table td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+        }
 
-    .card-action {
-      padding: 0.5rem 1rem;
-      background: var(--primary);
-      color: #fff;
-      font-size: 0.9rem;
-      border-radius: var(--radius);
-      cursor: pointer;
-      border: none;
-      transition: background var(--transition-speed);
-    }
+        .reservations-table th {
+            background: var(--primary-light);
+            color: var(--primary);
+            font-weight: 600;
+        }
 
-    .card-action:hover {
-      background: #43A047;
-    }
-  </style>
+        .reservations-table tr:hover {
+            background: var(--primary-light);
+        }
+
+        .status-badge {
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .status-pending {
+            background: var(--warning);
+            color: #856404;
+        }
+
+        .status-approved {
+            background: var(--success);
+            color: white;
+        }
+
+        .status-cancelled {
+            background: var(--danger);
+            color: white;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn {
+            padding: 5px 10px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .btn-approve {
+            background: var(--success);
+            color: white;
+        }
+
+        .btn-reject {
+            background: var(--danger);
+            color: white;
+        }
+
+        .btn:hover {
+            opacity: 0.9;
+            transform: translateY(-1px);
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            width: 400px;
+            max-width: 90%;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .modal-title {
+            font-size: 1.2rem;
+            color: var(--text);
+        }
+
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--text-light);
+        }
+
+        .modal-body {
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: var(--text);
+        }
+
+        .form-group textarea {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            resize: vertical;
+        }
+
+        .modal-footer {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+
+        .btn-cancel {
+            background: var(--text-light);
+            color: white;
+        }
+
+        /* Alert Styles */
+        .alert {
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .alert-success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .alert-error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+    </style>
 </head>
 <body>
-  <div class="app-container">
-    <!-- Sidebar -->
-    <aside class="sidebar">
-      <div class="app-logo">
-        <i class="fas fa-book"></i> KitabZone
-      </div>
-      <nav>
-        <a href="${pageContext.request.contextPath}/admin/adminDashboard" class="nav-item"><i class="fas fa-th-large"></i> Dashboard</a>
-        <a href="${pageContext.request.contextPath}/admin/member" class="nav-item"><i class="fas fa-users"></i> Member</a>
-        <a href="${pageContext.request.contextPath}/admin/books" class="nav-item"><i class="fas fa-list"></i> Book</a>
-        <a href="${pageContext.request.contextPath}/admin/transactionControl" class="nav-item"><i class="fas fa-tasks"></i> Transaction Control</a>
-        <a href="${pageContext.request.contextPath}/admin/reservationManagement" class="nav-item active"><i class="fas fa-calendar-check"></i> Reservation Management</a>
-        <a href="${pageContext.request.contextPath}/admin/fineManagement" class="nav-item"><i class="fas fa-hand-holding-usd"></i> Fine Administration</a>
+    <div class="app-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="app-logo">
+                <i class="fas fa-book"></i> KitabZone
+            </div>
+            <nav>
+                <a href="${pageContext.request.contextPath}/admin/adminDashboard" class="nav-item"><i class="fas fa-th-large"></i> Dashboard</a>
+                <a href="${pageContext.request.contextPath}/admin/member" class="nav-item"><i class="fas fa-users"></i> Member</a>
+                <a href="${pageContext.request.contextPath}/admin/books" class="nav-item"><i class="fas fa-list"></i> Book</a>
+                <a href="${pageContext.request.contextPath}/admin/transactionControl" class="nav-item"><i class="fas fa-tasks"></i> Transaction Control</a>
+                <a href="${pageContext.request.contextPath}/admin/reservationManagement" class="nav-item active"><i class="fas fa-calendar-check"></i> Reservation Management</a>
+                <a href="${pageContext.request.contextPath}/admin/fineManagement" class="nav-item"><i class="fas fa-hand-holding-usd"></i> Fine Administration</a>
+            </nav>
+        </aside>
 
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="page-header">
+                <h1 class="page-title">Reservation Management</h1>
+                <div class="search-box">
+                    <input type="text" id="searchInput" placeholder="Search reservations...">
+                    <button><i class="fas fa-search"></i> Search</button>
+                </div>
+            </div>
 
+            <c:if test="${not empty success}">
+                <div class="alert alert-success">
+                    ${success}
+                </div>
+            </c:if>
 
-      </nav>
-    </aside>
+            <c:if test="${not empty error}">
+                <div class="alert alert-error">
+                    ${error}
+                </div>
+            </c:if>
 
-    <!-- Main Content -->
-    <main class="main-content">
-      <div class="header">
-        <div class="global-search">
-          <i class="fas fa-search"></i>
-          <input type="text" placeholder="Search Reservations" />
+            <div class="reservations-table">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Book Title</th>
+                            <th>Member Name</th>
+                            <th>Reservation Date</th>
+                            <th>Priority</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <c:forEach items="${reservations}" var="reservation">
+                            <tr>
+                                <td>${reservation.bookTitle}</td>
+                                <td>${reservation.userName}</td>
+                                <td>${reservation.reservationDate}</td>
+                                <td>${reservation.priority}</td>
+                                <td>
+                                    <span class="status-badge status-${reservation.status.name().toLowerCase()}">
+                                        ${reservation.status}
+                                    </span>
+                                </td>
+                                <td class="action-buttons">
+                                    <c:if test="${reservation.status == 'PENDING'}">
+                                        <form action="${pageContext.request.contextPath}/admin/reservationManagement" method="post" style="display: inline;">
+                                            <input type="hidden" name="action" value="approve">
+                                            <input type="hidden" name="reservationId" value="${reservation.id}">
+                                            <button type="submit" class="btn btn-approve">
+                                                <i class="fas fa-check"></i> Approve
+                                            </button>
+                                        </form>
+                                        <button class="btn btn-reject" onclick="openRejectModal(${reservation.id})">
+                                            <i class="fas fa-times"></i> Reject
+                                        </button>
+                                    </c:if>
+                                </td>
+                            </tr>
+                        </c:forEach>
+                    </tbody>
+                </table>
+            </div>
+        </main>
+    </div>
+
+    <!-- Reject Modal -->
+    <div id="rejectModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Reject Reservation</h3>
+                <button class="close-modal" onclick="closeRejectModal()">&times;</button>
+            </div>
+            <form action="${pageContext.request.contextPath}/admin/reservationManagement" method="post">
+                <input type="hidden" name="action" value="reject">
+                <input type="hidden" name="reservationId" id="rejectReservationId">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="reason">Reason for Rejection:</label>
+                        <textarea id="reason" name="reason" rows="4" required></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-cancel" onclick="closeRejectModal()">Cancel</button>
+                    <button type="submit" class="btn btn-reject">Reject Reservation</button>
+                </div>
+            </form>
         </div>
-      </div>
+    </div>
 
-      <!-- Cards Section -->
-      <div class="card">
-        <i class="fas fa-hourglass-half"></i>
-        <div class="card-content">
-          <h2 class="card-title">View Pending Requests</h2>
-          <p class="card-subtitle">Check and manage all reservation requests.</p>
-        </div>
-        <button class="card-action">View</button>
-      </div>
+    <script>
+        function openRejectModal(reservationId) {
+            document.getElementById('rejectModal').style.display = 'flex';
+            document.getElementById('rejectReservationId').value = reservationId;
+        }
 
-      <div class="card">
-        <i class="fas fa-check-circle"></i>
-        <div class="card-content">
-          <h2 class="card-title">Approve/Deny Reservations</h2>
-          <p class="card-subtitle">Decide and process reservation approvals.</p>
-        </div>
-        <button class="card-action">Manage</button>
-      </div>
+        function closeRejectModal() {
+            document.getElementById('rejectModal').style.display = 'none';
+            document.getElementById('reason').value = '';
+        }
 
-      <div class="card">
-        <i class="fas fa-clock"></i>
-        <div class="card-content">
-          <h2 class="card-title">Set Expiry Periods</h2>
-          <p class="card-subtitle">Define how long reservations remain valid.</p>
-        </div>
-        <button class="card-action">Set</button>
-      </div>
+        // Search functionality
+        document.getElementById('searchInput').addEventListener('keyup', function() {
+            const searchText = this.value.toLowerCase();
+            const rows = document.querySelectorAll('.reservations-table tbody tr');
 
-      <div class="card">
-        <i class="fas fa-bell"></i>
-        <div class="card-content">
-          <h2 class="card-title">Notify Students</h2>
-          <p class="card-subtitle">Send alerts for available reservations.</p>
-        </div>
-        <button class="card-action">Notify</button>
-      </div>
-    </main>
-  </div>
+            rows.forEach(row => {
+                const text = row.textContent.toLowerCase();
+                row.style.display = text.includes(searchText) ? '' : 'none';
+            });
+        });
+    </script>
 </body>
 </html>

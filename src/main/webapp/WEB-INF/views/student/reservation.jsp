@@ -1,525 +1,402 @@
-<%@ page contentType="text/html;charset=UTF-8" %>
-<html lang="en">
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib prefix="c" uri="jakarta.tags.core" %>
+
+<!DOCTYPE html>
+<html>
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>My Reservations - Library Management System</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
-  <style>
-    :root {
-      --primary: #4CAF50;
-      --background: #F8F9FA;
-      --card-bg: #FFFFFF;
-      --text-primary: #2D3436;
-      --text-secondary: #636E72;
-      --border-color: #E9ECEF;
-      --hover-bg: #F1F4F6;
-      --shadow: 0 2px 4px rgba(0,0,0,0.05);
-      --radius: 8px;
-      --warning: #FFC107;
-      --danger: #DC3545;
-      --success: #28A745;
-    }
+    <title>My Reservations</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #4CAF50;
+            --primary-dark: #3e8e41;
+            --background: #F8F9FA;
+            --card-bg: #FFFFFF;
+            --text-primary: #2D3436;
+            --text-secondary: #636E72;
+            --border-color: #E9ECEF;
+            --hover-bg: #F1F4F6;
+            --shadow: 0 2px 4px rgba(0,0,0,0.05);
+            --radius: 8px;
+            --error: #DC3545;
+            --warning: #FFC107;
+        }
 
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-    }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Roboto, sans-serif;
+        }
 
-    body {
-      background: var(--background);
-      min-height: 100vh;
-      overflow-x: hidden;
-    }
+        body {
+            background: var(--background);
+            display: flex;
+            min-height: 100vh;
+        }
 
-    .app-container {
-      display: flex;
-      min-height: 100vh;
-    }
+        .sidebar {
+                   background: white;
+                   padding: 20px;
+                   box-shadow: var(--shadow);
+               }
 
-    .sidebar {
-      background: var(--card-bg);
-      padding: 1.5rem;
-      border-right: 1px solid var(--border-color);
-      width: 250px;
-      flex-shrink: 0;
-    }
+               .app-logo {
+                   display: flex;
+                   align-items: center;
+                   gap: 10px;
+                   font-size: 1.5rem;
+                   font-weight: bold;
+                   color: var(--primary);
+                   margin-bottom: 30px;
+               }
 
-    .app-logo {
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-      font-size: 1.25rem;
-      font-weight: 600;
-      margin-bottom: 2rem;
-      color: var(--text-primary);
-    }
+               .nav-item {
+                   display: flex;
+                   align-items: center;
+                   gap: 10px;
+                   padding: 12px 15px;
+                   color: var(--text);
+                   text-decoration: none;
+                   border-radius: 8px;
+                   margin-bottom: 5px;
+                   transition: all 0.3s ease;
+               }
 
-    .app-logo i {
-      font-size: 1.5rem;
-      color: var(--primary);
-    }
+               .nav-item:hover {
+                   background: var(--primary-light);
+               }
 
-    nav {
-      display: flex;
-      flex-direction: column;
-      gap: 0.5rem;
-    }
+               .nav-item.active {
+                   background: var(--primary);
+                   color: white;
+               }
 
-    .nav-item {
-      display: flex;
-      align-items: center;
-      padding: 0.875rem 1rem;
-      color: var(--text-secondary);
-      text-decoration: none;
-      border-radius: var(--radius);
-      transition: all 0.2s;
-      font-size: 0.95rem;
-    }
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            padding: 2rem;
+            overflow-y: auto;
+        }
 
-    .nav-item i {
-      width: 20px;
-      margin-right: 0.75rem;
-      font-size: 1.1rem;
-    }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 20px;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+        }
 
-    .nav-item:hover {
-      background: var(--hover-bg);
-      color: var(--text-primary);
-    }
+        h1 {
+            color: var(--text-primary);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
 
-    .nav-item.active {
-      background: var(--primary);
-      color: white;
-    }
+        .message {
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: var(--radius);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
 
-    .nav-item.active i {
-      color: white;
-    }
+        .success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
 
-    .nav-group {
-      margin-bottom: 1.5rem;
-    }
+        .error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
 
-    .nav-group-title {
-      font-size: 0.75rem;
-      text-transform: uppercase;
-      color: var(--text-secondary);
-      font-weight: 500;
-      padding: 0 1rem;
-      margin-bottom: 0.5rem;
-    }
+        /* Book Grid Styles */
+        .book-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+            padding: 20px 0;
+        }
 
-    .main-content {
-      flex: 1;
-      padding: 2rem;
-      overflow-y: auto;
-    }
+        .book-card {
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
 
-    .header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 2rem;
-    }
+        .book-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
 
-    .page-title {
-      font-size: 1.75rem;
-      font-weight: 600;
-      color: var(--text-primary);
-    }
+        .book-cover {
+            width: 100%;
+            height: 200px;
+            background-color: var(--hover-bg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-secondary);
+            overflow: hidden;
+        }
 
-    .tabs {
-      display: flex;
-      gap: 1rem;
-      margin-bottom: 2rem;
-      border-bottom: 1px solid var(--border-color);
-      padding-bottom: 1rem;
-      flex-wrap: wrap;
-    }
+        .book-cover img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
 
-    .tab {
-      padding: 0.75rem 1.5rem;
-      border-radius: var(--radius);
-      cursor: pointer;
-      font-weight: 500;
-      color: var(--text-secondary);
-      transition: all 0.2s;
-    }
+        .book-cover i {
+            font-size: 48px;
+            color: var(--primary);
+        }
 
-    .tab.active {
-      background: var(--primary);
-      color: white;
-    }
+        .book-info {
+            padding: 15px;
+        }
 
-    .reservations-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-      gap: 1.5rem;
-    }
+        .book-title {
+            font-size: 1.1em;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: var(--text-primary);
+        }
 
-    .reservation-card {
-      background: var(--card-bg);
-      border-radius: var(--radius);
-      padding: 1.5rem;
-      box-shadow: var(--shadow);
-    }
+        .book-details {
+            margin-bottom: 15px;
+        }
 
-    .reservation-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      margin-bottom: 1.5rem;
-    }
+        .book-detail {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 8px;
+            color: var(--text-secondary);
+            font-size: 0.9em;
+        }
 
-    .book-info {
-      display: flex;
-      gap: 1.5rem;
-    }
+        .book-detail i {
+            width: 16px;
+            color: var(--primary);
+        }
 
-    .book-cover {
-      width: 100px;
-      height: 150px;
-      border-radius: var(--radius);
-      overflow: hidden;
-    }
+        .status-badge {
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            font-weight: 500;
+            text-transform: uppercase;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            margin-bottom: 15px;
+        }
 
-    .book-cover img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
+        .status-pending {
+            background-color: #fff3cd;
+            color: #856404;
+            border: 1px solid #ffeeba;
+        }
 
-    .book-details h3 {
-      font-size: 1.25rem;
-      margin-bottom: 0.5rem;
-      color: var(--text-primary);
-    }
+        .status-approved {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
 
-    .book-author {
-      color: var(--text-secondary);
-      margin-bottom: 1rem;
-    }
+        .status-cancelled {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
 
-    .status-badge {
-      padding: 0.5rem 1rem;
-      border-radius: 50px;
-      font-size: 0.875rem;
-      font-weight: 500;
-    }
+        .status-fulfilled {
+            background-color: #cce5ff;
+            color: #004085;
+            border: 1px solid #b8daff;
+        }
 
-    .status-active {
-      background: #E8F5E9;
-      color: var(--success);
-    }
+        .status-expired {
+            background-color: #e2e3e5;
+            color: #383d41;
+            border: 1px solid #d6d8db;
+        }
 
-    .status-pending {
-      background: #FFF3E0;
-      color: var(--warning);
-    }
+        .cancel-btn {
+            width: 100%;
+            padding: 10px;
+            background-color: var(--error);
+            color: white;
+            border: none;
+            border-radius: var(--radius);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: background-color 0.3s;
+            font-weight: 500;
+        }
 
-    .status-expiring {
-      background: #FFEBEE;
-      color: var(--danger);
-    }
+        .cancel-btn:hover {
+            background-color: #c82333;
+        }
 
-    .reservation-timeline {
-      margin: 2rem 0;
-      position: relative;
-      padding-left: 2rem;
-    }
+        .empty-state {
+            text-align: center;
+            padding: 40px;
+            color: var(--text-secondary);
+        }
 
-    .timeline-item {
-      position: relative;
-      padding-bottom: 1.5rem;
-    }
+        .empty-state i {
+            font-size: 48px;
+            margin-bottom: 20px;
+            color: var(--border-color);
+        }
 
-    .timeline-item::before {
-      content: '';
-      position: absolute;
-      left: -2rem;
-      top: 0;
-      width: 1px;
-      height: 100%;
-      background: var(--border-color);
-    }
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 60px;
+                padding: 10px 0;
+            }
 
-    .timeline-item::after {
-      content: '';
-      position: absolute;
-      left: -2.25rem;
-      top: 0.25rem;
-      width: 0.5rem;
-      height: 0.5rem;
-      border-radius: 50%;
-      background: var(--primary);
-    }
+            .app-logo span {
+                display: none;
+            }
 
-    .timeline-date {
-      font-size: 0.875rem;
-      color: var(--text-secondary);
-      margin-bottom: 0.25rem;
-    }
+            .nav-item span {
+                display: none;
+            }
 
-    .timeline-event {
-      color: var(--text-primary);
-    }
+            .main-content {
+                margin-left: 60px;
+            }
 
-    .queue-position {
-      background: var(--hover-bg);
-      padding: 1rem;
-      border-radius: var(--radius);
-      margin: 1rem 0;
-    }
+            .container {
+                padding: 10px;
+            }
 
-    .position-indicator {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      margin-top: 0.5rem;
-    }
-
-    .position-bar {
-      flex: 1;
-      height: 4px;
-      background: var(--border-color);
-      border-radius: 2px;
-      overflow: hidden;
-    }
-
-    .position-progress {
-      height: 100%;
-      background: var(--primary);
-      width: 30%;
-    }
-
-    .reservation-actions {
-      display: flex;
-      gap: 1rem;
-      margin-top: 1.5rem;
-      padding-top: 1.5rem;
-      border-top: 1px solid var(--border-color);
-      flex-wrap: wrap;
-    }
-
-    .btn {
-      padding: 0.75rem 1.5rem;
-      border-radius: var(--radius);
-      font-size: 0.95rem;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      transition: all 0.2s;
-      border: none;
-    }
-
-    .btn-primary {
-      background: var(--primary);
-      color: white;
-    }
-
-    .btn-outline {
-      border: 1px solid var(--border-color);
-      background: transparent;
-      color: var(--text-secondary);
-    }
-
-    .btn-danger {
-      background: var(--danger);
-      color: white;
-    }
-
-    .notification-settings {
-      margin-top: 1rem;
-      font-size: 0.875rem;
-      color: var(--text-secondary);
-    }
-
-    .settings-toggle {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      cursor: pointer;
-    }
-
-    .settings-toggle i {
-      color: var(--primary);
-    }
-
-    @media (max-width: 768px) {
-      .app-container {
-        flex-direction: column;
-      }
-      .sidebar {
-        width: 100%;
-        height: auto;
-        position: static;
-        border-right: none;
-        border-bottom: 1px solid var(--border-color);
-      }
-      .main-content {
-        margin-left: 0;
-      }
-    }
-  </style>
+            .book-grid {
+                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+                gap: 15px;
+            }
+        }
+    </style>
 </head>
 <body>
-  <div class="app-container">
-   <!-- This sidebar structure should be the same in all files -->
-<aside class="sidebar">
-  <div class="app-logo">
-      <i class="fas fa-book"></i>
-      KitabZone
-  </div>
-  <nav>
-      <a href="${pageContext.request.contextPath}/student/studentDashboard" class="nav-item">
-          <i class="fas fa-th-large"></i>
-          Dashboard
-      </a>
-       <a href="${pageContext.request.contextPath}/student/myBooks" class="nav-item">
-          <i class="fas fa-book"></i>
-          My Books
-      </a>
-       <a href="${pageContext.request.contextPath}/student/browseBooks" class="nav-item">
-          <i class="fas fa-search"></i>
-          Browse Books
-      </a>
-      <a href="${pageContext.request.contextPath}/student/reservation" class="nav-item active">
-          <i class="fas fa-clock"></i>
-          Reservations
-      </a>
-      <a href="${pageContext.request.contextPath}/student/fines" class="nav-item">
-          <i class="fas fa-dollar-sign"></i>
-          Fines & Payments
-      </a>
-      <a href="${pageContext.request.contextPath}/student/profile" class="nav-item">
-          <i class="fas fa-user"></i>
-          Profile
-      </a>
-  </nav>
-</aside>
+    <!-- Sidebar Navigation -->
+   <aside class="sidebar">
+               <div class="app-logo">
+                   <i class="fas fa-book"></i> KitabZone
+               </div>
+               <nav>
+                   <a href="${pageContext.request.contextPath}/student/studentDashboard" class="nav-item">
+                       <i class="fas fa-th-large"></i> Dashboard
+                   </a>
+                   <a href="${pageContext.request.contextPath}/student/browseBooks" class="nav-item">
+                       <i class="fas fa-book"></i> Browse Books
+                   </a>
+                   <a href="${pageContext.request.contextPath}/student/myBooks" class="nav-item">
+                       <i class="fas fa-book-reader"></i> My Books
+                   </a>
+                   <a href="${pageContext.request.contextPath}/student/reservation" class="nav-item active">
+                    <i class="fas fa-book-reader"></i> My Reservations
+                    </a>
+                   <a href="${pageContext.request.contextPath}/student/fines" class="nav-item">
+                       <i class="fas fa-money-bill-wave"></i> My Fines
+                   </a>
+                   <a href="${pageContext.request.contextPath}/student/profile" class="nav-item ">
+                       <i class="fas fa-user"></i> Profile
+                   </a>
+               </nav>
+           </aside>
 
     <!-- Main Content -->
     <main class="main-content">
-      <div class="header">
-        <h1 class="page-title">My Reservations</h1>
-      </div>
+        <div class="container">
+            <h1>
+                <i class="fas fa-calendar-check"></i>
+                My Reservations
+            </h1>
 
-      <div class="tabs">
-        <div class="tab active">Active (2)</div>
-        <div class="tab">Pending (1)</div>
-        <div class="tab">History</div>
-      </div>
+            <c:if test="${not empty success}">
+                <div class="message success">
+                    <i class="fas fa-check-circle"></i>
+                    ${success}
+                </div>
+            </c:if>
 
-       <!-- Reservations Grid -->
-       <div class="reservations-grid">
-        <!-- Active Reservation -->
-        <div class="reservation-card">
-            <div class="reservation-header">
-                <div class="book-info">
-                    <div class="book-cover">
-                        <img src="https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c" alt="Book Cover">
+            <c:if test="${not empty error}">
+                <div class="message error">
+                    <i class="fas fa-exclamation-circle"></i>
+                    ${error}
+                </div>
+            </c:if>
+
+            <c:choose>
+                <c:when test="${empty reservations}">
+                    <div class="empty-state">
+                        <i class="fas fa-calendar-times"></i>
+                        <h3>No Reservations Found</h3>
+                        <p>You haven't made any book reservations yet.</p>
                     </div>
-                    <div class="book-details">
-                        <h3>The Design of Everyday Things</h3>
-                        <p class="book-author">Don Norman</p>
-                        <span class="status-badge status-active">Ready for Pickup</span>
+                </c:when>
+                <c:otherwise>
+                    <div class="book-grid">
+                        <c:forEach items="${reservations}" var="reservation">
+                            <div class="book-card">
+                                <div class="book-cover">
+                                    <c:choose>
+                                        <c:when test="${not empty reservation.bookCover}">
+                                            <img src="${pageContext.request.contextPath}/uploads/${reservation.bookCover}" alt="${reservation.bookTitle}" onerror="this.style.display='none'; this.parentElement.querySelector('i').style.display='flex';">
+                                        </c:when>
+                                        <c:otherwise>
+                                            <i class="fas fa-book"></i>
+                                        </c:otherwise>
+                                    </c:choose>
+                                </div>
+                                <div class="book-info">
+                                    <div class="book-title">${reservation.bookTitle}</div>
+                                    <div class="book-details">
+                                        <div class="book-detail">
+                                            <i class="fas fa-calendar"></i>
+                                            <span>Reserved: ${reservation.reservationDate}</span>
+                                        </div>
+                                        <div class="book-detail">
+                                            <i class="fas fa-sort-numeric-up"></i>
+                                            <span>Priority: ${reservation.priority}</span>
+                                        </div>
+                                    </div>
+                                    <span class="status-badge status-${reservation.status.name().toLowerCase()}">
+                                        <i class="fas fa-circle"></i>
+                                        ${reservation.status}
+                                    </span>
+                                    <c:if test="${reservation.status == 'PENDING'}">
+                                        <form action="${pageContext.request.contextPath}/student/reservation/cancel" method="post" onsubmit="return confirm('Are you sure you want to cancel this reservation?');">
+                                            <input type="hidden" name="reservationId" value="${reservation.id}">
+                                            <button type="submit" class="cancel-btn">
+                                                <i class="fas fa-times"></i>
+                                                Cancel Reservation
+                                            </button>
+                                        </form>
+                                    </c:if>
+                                </div>
+                            </div>
+                        </c:forEach>
                     </div>
-                </div>
-            </div>
-
-            <div class="reservation-timeline">
-                <div class="timeline-item">
-                    <div class="timeline-date">Today</div>
-                    <div class="timeline-event">Book is ready for pickup</div>
-                </div>
-                <div class="timeline-item">
-                    <div class="timeline-date">Oct 15, 2023</div>
-                    <div class="timeline-event">Reservation confirmed</div>
-                </div>
-                <div class="timeline-item">
-                    <div class="timeline-date">Oct 14, 2023</div>
-                    <div class="timeline-event">Reservation requested</div>
-                </div>
-            </div>
-
-            <div class="notification-settings">
-                <div class="settings-toggle">
-                    <i class="fas fa-bell"></i>
-                    Email notifications enabled
-                </div>
-            </div>
-
-            <div class="reservation-actions">
-                <button class="btn btn-primary">
-                    <i class="fas fa-check"></i>
-                    Confirm Pickup
-                </button>
-                <button class="btn btn-danger">
-                    <i class="fas fa-times"></i>
-                    Cancel Reservation
-                </button>
-            </div>
-        </div>
-
-        <!-- Pending Reservation -->
-        <div class="reservation-card">
-            <div class="reservation-header">
-                <div class="book-info">
-                    <div class="book-cover">
-                        <img src="https://images.unsplash.com/photo-1589829085413-56de8ae18c73" alt="Book Cover">
-                    </div>
-                    <div class="book-details">
-                        <h3>Clean Code</h3>
-                        <p class="book-author">Robert C. Martin</p>
-                        <span class="status-badge status-pending">Queue Position: 2</span>
-                    </div>
-                </div>
-            </div>
-
-            <div class="queue-position">
-                <h4>Your Position in Queue</h4>
-                <div class="position-indicator">
-                    <span>2 of 6</span>
-                    <div class="position-bar">
-                        <div class="position-progress"></div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="reservation-timeline">
-                <div class="timeline-item">
-                    <div class="timeline-date">Estimated availability</div>
-                    <div class="timeline-event">Nov 1, 2023</div>
-                </div>
-                <div class="timeline-item">
-                    <div class="timeline-date">Oct 10, 2023</div>
-                    <div class="timeline-event">Added to queue</div>
-                </div>
-            </div>
-
-            <div class="notification-settings">
-                <div class="settings-toggle">
-                    <i class="fas fa-bell"></i>
-                    Notify when available
-                </div>
-            </div>
-
-            <div class="reservation-actions">
-                <button class="btn btn-outline">
-                    <i class="fas fa-eye"></i>
-                    View Details
-                </button>
-                <button class="btn btn-danger">
-                    <i class="fas fa-times"></i>
-                    Leave Queue
-                </button>
-            </div>
+                </c:otherwise>
+            </c:choose>
         </div>
     </main>
-  </div>
 </body>
 </html>

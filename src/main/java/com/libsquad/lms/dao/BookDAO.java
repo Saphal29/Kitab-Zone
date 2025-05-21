@@ -183,4 +183,15 @@ public class BookDAO {
             return BookStatus.AVAILABLE;
         }
     }
+
+    public int getTotalBooks() throws SQLException {
+        String sql = "SELECT COUNT(*) FROM books";
+        try (PreparedStatement stmt = conn.prepareStatement(sql);
+             ResultSet rs = stmt.executeQuery()) {
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+            return 0;
+        }
+    }
 }

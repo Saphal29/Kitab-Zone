@@ -427,39 +427,31 @@
 </head>
 <body>
   <div class="app-container">
-    <!-- Sidebar -->
-    <aside class="sidebar">
-      <div class="app-logo">
-        <i class="fas fa-book"></i>
-        KitabZone
-      </div>
-      <nav>
-        <a href="${pageContext.request.contextPath}/student/studentDashboard" class="nav-item">
-          <i class="fas fa-th-large"></i>
-          Dashboard
-        </a>
-        <a href="${pageContext.request.contextPath}/student/myBooks" class="nav-item">
-          <i class="fas fa-book"></i>
-          My Books
-        </a>
-        <a href="${pageContext.request.contextPath}/student/browseBooks" class="nav-item active">
-          <i class="fas fa-search"></i>
-          Browse Books
-        </a>
-        <a href="${pageContext.request.contextPath}/student/reservation" class="nav-item">
-          <i class="fas fa-clock"></i>
-          Reservations
-        </a>
-        <a href="${pageContext.request.contextPath}/student/fines" class="nav-item">
-          <i class="fas fa-dollar-sign"></i>
-          Fines & Payments
-        </a>
-        <a href="${pageContext.request.contextPath}/student/profile" class="nav-item">
-          <i class="fas fa-user"></i>
-          Profile
-        </a>
-      </nav>
-    </aside>
+   <aside class="sidebar">
+               <div class="app-logo">
+                   <i class="fas fa-book"></i> KitabZone
+               </div>
+               <nav>
+                   <a href="${pageContext.request.contextPath}/student/studentDashboard" class="nav-item">
+                       <i class="fas fa-th-large"></i> Dashboard
+                   </a>
+                   <a href="${pageContext.request.contextPath}/student/browseBooks" class="nav-item active">
+                       <i class="fas fa-book"></i> Browse Books
+                   </a>
+                   <a href="${pageContext.request.contextPath}/student/myBooks" class="nav-item">
+                       <i class="fas fa-book-reader"></i> My Books
+                   </a>
+                   <a href="${pageContext.request.contextPath}/student/reservation" class="nav-item ">
+                                             <i class="fas fa-book-reader"></i> My Reservations
+                                             </a>
+                   <a href="${pageContext.request.contextPath}/student/fines" class="nav-item">
+                       <i class="fas fa-money-bill-wave"></i> My Fines
+                   </a>
+                   <a href="${pageContext.request.contextPath}/student/profile" class="nav-item ">
+                       <i class="fas fa-user"></i> Profile
+                   </a>
+               </nav>
+           </aside>
 
     <!-- Main Content -->
     <main class="main-content">
@@ -467,6 +459,21 @@
         <div class="header-top">
           <h1 class="page-title">Browse Books</h1>
         </div>
+
+        <!-- Messages -->
+        <c:if test="${not empty param.success}">
+            <div class="message message-success">
+                <i class="fas fa-check-circle"></i>
+                ${param.success}
+            </div>
+        </c:if>
+
+        <c:if test="${not empty param.error}">
+            <div class="message message-error">
+                <i class="fas fa-exclamation-circle"></i>
+                ${param.error}
+            </div>
+        </c:if>
 
         <div class="search-filter-row">
           <div class="search-container">
@@ -476,27 +483,10 @@
 
           <div class="filter-pills">
             <div class="filter-pill active"><i class="fas fa-th-large"></i> All Books</div>
-            <div class="filter-pill"><i class="fas fa-book"></i> Available Now</div>
-            <div class="filter-pill"><i class="fas fa-star"></i> Most Popular</div>
-            <div class="filter-pill"><i class="fas fa-clock"></i> Recently Added</div>
+
           </div>
         </div>
       </div>
-
-     <!-- Modified Success/Error Messages -->
-     <c:if test="${not empty param.success}">
-         <div class="message message-success">
-             <i class="fas fa-check-circle"></i>
-             ${param.success}
-         </div>
-     </c:if>
-
-     <c:if test="${not empty param.error}">
-         <div class="message message-error">
-             <i class="fas fa-exclamation-circle"></i>
-             ${param.error}
-         </div>
-     </c:if>
 
       <!-- Books Grid -->
       <div class="books-grid">
