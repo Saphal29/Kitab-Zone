@@ -61,8 +61,8 @@ public class AddBookServlet extends HttpServlet {
                 String filePath = uploadPath + File.separator + fileName;
                 filePart.write(filePath);
 
-                // Save relative path in DB (optional: just fileName if you serve from /uploads)
-                book.setCoverImage("uploads/" + fileName);
+                // Save just the filename in DB
+                book.setCoverImage(fileName);
             }
 
             new BookService().createBook(book);

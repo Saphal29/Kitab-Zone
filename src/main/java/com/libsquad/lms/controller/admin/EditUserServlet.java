@@ -4,13 +4,22 @@ import com.libsquad.lms.dao.UserDao;
 import com.libsquad.lms.model.User;
 import com.libsquad.lms.model.UserRole;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.Part;
+import java.io.File;
 import java.io.IOException;
+import java.util.UUID;
 
 @WebServlet(name = "EditUserServlet", value = {"/admin/editUser", "/admin/updateUser"})
+@MultipartConfig(
+        fileSizeThreshold = 1024 * 1024, // 1 MB
+        maxFileSize = 1024 * 1024 * 5,    // 5 MB
+        maxRequestSize = 1024 * 1024 * 10  // 10 MB
+)
 public class EditUserServlet extends HttpServlet {
     private final UserDao userDao = new UserDao();
 
@@ -41,6 +50,18 @@ public class EditUserServlet extends HttpServlet {
             if (existingUser == null) {
                 response.sendRedirect(request.getContextPath() + "/admin/member?error=User+not+found");
                 return;
+            }
+
+            // Handle profile picture upload
+            Part filePart = request.getPart("profilePic");
+            if (filePart != null && filePart.getSize() > 0) {
+                String uploadDir = getServletContext().getRealPath("/uploads");
+                File dir = new File(uploadDir);
+                if (!dir.exists()) dir.mkdirs();
+
+                String fileName = UUID.randomUUID() + "-" + filePart.getSubmittedFileName();
+                filePart.write(uploadDir + File.separator + fileName);
+                existingUser.setProfilePic(fileName);  // Store only the filename
             }
 
             // Update user details

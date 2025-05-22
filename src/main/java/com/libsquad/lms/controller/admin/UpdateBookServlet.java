@@ -45,21 +45,21 @@ public class UpdateBookServlet extends HttpServlet {
             book.setGenre(String.valueOf(genre));
             book.setTotalCopies(copies);
 
-            // Handle cover image update directly
+            // Handle cover image update
             if (filePart != null && filePart.getSize() > 0) {
                 String fileName = Paths.get(filePart.getSubmittedFileName()).getFileName().toString();
                 String uploadPath = request.getServletContext().getRealPath("/uploads");
 
                 File uploadDir = new File(uploadPath);
                 if (!uploadDir.exists()) {
-                    uploadDir.mkdirs(); // Create folder if missing
+                    uploadDir.mkdirs();
                 }
 
                 String fullPath = uploadPath + File.separator + fileName;
                 filePart.write(fullPath);
 
-                // Save relative path or just fileName
-                book.setCoverImage("uploads/" + fileName);
+                // Save just the filename
+                book.setCoverImage(fileName);
             }
 
             bookService.updateBook(book);
@@ -67,9 +67,10 @@ public class UpdateBookServlet extends HttpServlet {
             response.sendRedirect(request.getContextPath() +
                     "/admin/books?success=Book+updated+successfully");
 
-        } catch (ValidationException | IllegalArgumentException e) {
+        } catch (ValidationException e) {
             request.setAttribute("error", e.getMessage());
-            request.getRequestDispatcher("/WEB-INF/views/admin/bookList.jsp")
+            request.setAttribute("genres", Genre.values());
+            request.getRequestDispatcher("/WEB-INF/views/admin/editBook.jsp")
                     .forward(request, response);
         } catch (Exception e) {
             request.setAttribute("error", "System error: " + e.getMessage());

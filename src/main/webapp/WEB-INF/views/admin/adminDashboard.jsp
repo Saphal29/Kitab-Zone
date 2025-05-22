@@ -237,6 +237,7 @@
                 <a href="${pageContext.request.contextPath}/admin/transactionControl" class="nav-item"><i class="fas fa-tasks"></i> Transaction Control</a>
                 <a href="${pageContext.request.contextPath}/admin/reservationManagement" class="nav-item"><i class="fas fa-calendar-check"></i> Reservation Management</a>
                 <a href="${pageContext.request.contextPath}/admin/fineManagement" class="nav-item"><i class="fas fa-hand-holding-usd"></i> Fine Administration</a>
+                <a href="${pageContext.request.contextPath}/logout" class="nav-item" style="margin-top: auto; color: var(--danger);" onclick="return confirm('Are you sure you want to logout?')"><i class="fas fa-sign-out-alt"></i> Logout</a>
             </nav>
         </aside>
 
@@ -270,30 +271,7 @@
                 </div>
             </div>
 
-            <!-- Recent Activity -->
-            <div class="recent-activity">
-                <h2>Recent Activity</h2>
-                <ul class="activity-list">
-                    <c:if test="${empty recentActivities}">
-                        <li class="activity-item">
-                            <div class="activity-details">
-                                <div class="activity-title">No recent activities</div>
-                            </div>
-                        </li>
-                    </c:if>
-                    <c:forEach items="${recentActivities}" var="activity">
-                        <li class="activity-item">
-                            <div class="activity-icon ${activity.type}">
-                                <i class="fas fa-${activity.icon}"></i>
-                            </div>
-                            <div class="activity-details">
-                                <div class="activity-title">${activity.title}</div>
-                                <div class="activity-time">${activity.time}</div>
-                            </div>
-                        </li>
-                    </c:forEach>
-                </ul>
-            </div>
+
 
             <!-- Quick Actions -->
             <div class="quick-actions">

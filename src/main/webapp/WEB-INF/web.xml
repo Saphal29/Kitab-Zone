@@ -2,7 +2,7 @@
 <web-app xmlns="https://jakarta.ee/xml/ns/jakartaee"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee
-         https://jakarta.ee/xml/ns/jakartaee/web-app_6_0.xsd"
+            https://jakarta.ee/xml/ns/jakartaee/web-app_6_0.xsd"
          version="6.0">
 
     <display-name>Library Management System</display-name>
@@ -29,6 +29,43 @@
     <servlet-mapping>
         <servlet-name>default</servlet-name>
         <url-pattern>/uploads/*</url-pattern>
+    </servlet-mapping>
+
+    <!-- Admin Book Management Servlets -->
+    <servlet>
+        <servlet-name>BookListServlet</servlet-name>
+        <servlet-class>com.libsquad.lms.controller.admin.BookListServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>BookListServlet</servlet-name>
+        <url-pattern>/admin/books</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>AddBookServlet</servlet-name>
+        <servlet-class>com.libsquad.lms.controller.admin.AddBookServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>AddBookServlet</servlet-name>
+        <url-pattern>/admin/addBook</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>UpdateBookServlet</servlet-name>
+        <servlet-class>com.libsquad.lms.controller.admin.UpdateBookServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>UpdateBookServlet</servlet-name>
+        <url-pattern>/admin/updateBook</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>DeleteBookServlet</servlet-name>
+        <servlet-class>com.libsquad.lms.controller.admin.DeleteBookServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>DeleteBookServlet</servlet-name>
+        <url-pattern>/admin/deleteBook</url-pattern>
     </servlet-mapping>
 
     <!-- Student Dashboard Servlet -->

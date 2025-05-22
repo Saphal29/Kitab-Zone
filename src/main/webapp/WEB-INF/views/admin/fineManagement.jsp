@@ -310,19 +310,19 @@
 <body>
     <!-- Sidebar Navigation -->
     <aside class="sidebar">
-        <div class="app-logo">
-            <i class="fas fa-book"></i> KitabZone
-        </div>
-        <nav>
-            <a href="${pageContext.request.contextPath}/admin/adminDashboard" class="nav-item "><i class="fas fa-th-large"></i> Dashboard</a>
-            <a href="${pageContext.request.contextPath}/admin/member" class="nav-item"><i class="fas fa-users"></i> Member</a>
-            <a href="${pageContext.request.contextPath}/admin/books" class="nav-item"><i class="fas fa-list"></i> Book</a>
-            <a href="${pageContext.request.contextPath}/admin/transactionControl" class="nav-item"><i class="fas fa-tasks"></i> Transaction Control</a>
-            <a href="${pageContext.request.contextPath}/admin/reservationManagement" class="nav-item"><i class="fas fa-calendar-check"></i> Reservation Management</a>
-            <a href="${pageContext.request.contextPath}/admin/fineManagement" class="nav-item active"><i class="fas fa-hand-holding-usd"></i> Fine Administration</a>
-        </nav>
-    </aside>
+                      <div class="app-logo">
+                          <i class="fas fa-book"></i> KitabZone
+                      </div>
+                      <nav>
+                          <a href="${pageContext.request.contextPath}/admin/adminDashboard" class="nav-item "><i class="fas fa-th-large"></i> Dashboard</a>
+                          <a href="${pageContext.request.contextPath}/admin/member" class="nav-item"><i class="fas fa-users"></i> Member</a>
+                          <a href="${pageContext.request.contextPath}/admin/books" class="nav-item"><i class="fas fa-list"></i> Book</a>
+                          <a href="${pageContext.request.contextPath}/admin/transactionControl" class="nav-item"><i class="fas fa-tasks"></i> Transaction Control</a>
+                          <a href="${pageContext.request.contextPath}/admin/reservationManagement" class="nav-item"><i class="fas fa-calendar-check"></i> Reservation Management</a>
+                          <a href="${pageContext.request.contextPath}/admin/fineManagement" class="nav-item active"><i class="fas fa-hand-holding-usd"></i> Fine Administration</a>
 
+                      </nav>
+                  </aside>
     <!-- Main Content -->
     <main class="main-content">
         <div class="container">

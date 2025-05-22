@@ -213,9 +213,6 @@
                 <a href="${pageContext.request.contextPath}/student/myBooks" class="nav-item">
                     <i class="fas fa-book-reader"></i> My Books
                 </a>
-                <a href="${pageContext.request.contextPath}/student/reservation" class="nav-item ">
-                                          <i class="fas fa-book-reader"></i> My Reservations
-                                          </a>
                 <a href="${pageContext.request.contextPath}/student/fines" class="nav-item">
                     <i class="fas fa-money-bill-wave"></i> My Fines
                 </a>
@@ -231,11 +228,11 @@
                 <div class="profile-header">
                     <div class="profile-picture">
                         <c:choose>
-                            <c:when test="${not empty user.profilePic}">
+                            <c:when test="${not empty user.profilePic && user.profilePic != 'default.png'}">
                                 <img src="${pageContext.request.contextPath}/uploads/${user.profilePic}" alt="${user.fullName}">
                             </c:when>
                             <c:otherwise>
-                                <img src="https://ui-avatars.com/api/?name=${user.fullName}&background=28a745&color=fff" alt="${user.fullName}">
+                                <img src="https://ui-avatars.com/api/?name=${user.fullName}&background=28a745&color=fff&size=150" alt="${user.fullName}">
                             </c:otherwise>
                         </c:choose>
                     </div>
@@ -277,7 +274,7 @@
                 </div>
 
                 <div class="action-buttons">
-                    <a href="${pageContext.request.contextPath}/logout" class="btn btn-danger">
+                    <a href="${pageContext.request.contextPath}/logout" class="btn btn-danger" onclick="return confirm('Are you sure you want to logout?')">
                         <i class="fas fa-sign-out-alt"></i>
                         Logout
                     </a>

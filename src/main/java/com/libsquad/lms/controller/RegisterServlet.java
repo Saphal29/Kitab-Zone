@@ -40,7 +40,7 @@ public class RegisterServlet extends HttpServlet {
 
                 String fileName = UUID.randomUUID() + "-" + filePart.getSubmittedFileName();
                 filePart.write(uploadDir + File.separator + fileName);
-                profilePicPath = "/uploads/" + fileName;
+                profilePicPath = fileName;  // Store only the filename without uploads/ prefix
             }
 
             // Create user with all fields

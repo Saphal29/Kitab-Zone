@@ -21,68 +21,61 @@
       --shadow: 0 2px 10px rgba(0,0,0,0.1);
     }
 
-    /* Reset & Base */
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-    }
 
-    body {
-      background: var(--background);
-    }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
 
-    a {
-      text-decoration: none;
-      color: inherit;
-    }
+        body {
+            background: var(--secondary);
+            color: var(--text);
+        }
 
-    /* Layout */
-    .app-container {
-      display: grid;
-      grid-template-columns: 240px 1fr;
-      min-height: 100vh;
-    }
+        .app-container {
+            display: grid;
+            grid-template-columns: 250px 1fr;
+            min-height: 100vh;
+        }
 
-    /* Sidebar */
-    .sidebar {
-      background: var(--background);
-      padding: 1.5rem;
-      border-right: 1px solid var(--border-color);
-      height: 100vh;
-    }
+        .sidebar {
+            background: white;
+            padding: 20px;
+            box-shadow: var(--shadow);
+        }
 
-    .app-logo {
-      display: flex;
-      align-items: center;
-      font-size: 1.5rem;
-      font-weight: 600;
-      gap: 0.5rem;
-      margin-bottom: 2rem;
-      color: var(--text-primary);
-    }
+        .app-logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--primary);
+            margin-bottom: 30px;
+        }
 
-    .nav-item {
-      display: flex;
-      align-items: center;
-      padding: 0.75rem 1rem;
-      color: var(--text-secondary);
-      text-decoration: none;
-      border-radius: var(--radius);
-      margin-bottom: 0.5rem;
-      font-size: 0.875rem;
-    }
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 15px;
+            color: var(--text);
+            text-decoration: none;
+            border-radius: 8px;
+            margin-bottom: 5px;
+            transition: all 0.3s ease;
+        }
 
-    .nav-item.active {
-      background: var(--primary);
-      color: white;
-    }
+        .nav-item:hover {
+            background: var(--primary-light);
+        }
 
-    .nav-item i {
-      margin-right: 0.75rem;
-      width: 20px;
-    }
+        .nav-item.active {
+            background: var(--primary);
+            color: white;
+        }
 
     /* Main Content */
     .main-content {
@@ -196,18 +189,19 @@
   <div class="app-container">
     <!-- Sidebar -->
     <aside class="sidebar">
-      <div class="app-logo">
-        <i class="fas fa-book"></i> KitabZone
-      </div>
-      <nav>
-        <a href="${pageContext.request.contextPath}/admin/adminDashboard" class="nav-item"><i class="fas fa-th-large"></i> Dashboard</a>
-        <a href="${pageContext.request.contextPath}/admin/member" class="nav-item"><i class="fas fa-users"></i> Member</a>
-        <a href="${pageContext.request.contextPath}/admin/books" class="nav-item"><i class="fas fa-list"></i> Book</a>
-        <a href="${pageContext.request.contextPath}/admin/transactionControl" class="nav-item active"><i class="fas fa-tasks"></i> Transaction Control</a>
-        <a href="${pageContext.request.contextPath}/admin/reservationManagement" class="nav-item"><i class="fas fa-calendar-check"></i> Reservation Management</a>
-        <a href="${pageContext.request.contextPath}/admin/fineManagement" class="nav-item"><i class="fas fa-hand-holding-usd"></i> Fine Administration</a>
-      </nav>
-    </aside>
+                                <div class="app-logo">
+                                    <i class="fas fa-book"></i> KitabZone
+                                </div>
+                                <nav>
+                                    <a href="${pageContext.request.contextPath}/admin/adminDashboard" class="nav-item "><i class="fas fa-th-large"></i> Dashboard</a>
+                                    <a href="${pageContext.request.contextPath}/admin/member" class="nav-item"><i class="fas fa-users"></i> Member</a>
+                                    <a href="${pageContext.request.contextPath}/admin/books" class="nav-item"><i class="fas fa-list"></i> Book</a>
+                                    <a href="${pageContext.request.contextPath}/admin/transactionControl" class="nav-item active"><i class="fas fa-tasks"></i> Transaction Control</a>
+                                    <a href="${pageContext.request.contextPath}/admin/reservationManagement" class="nav-item "><i class="fas fa-calendar-check"></i> Reservation Management</a>
+                                    <a href="${pageContext.request.contextPath}/admin/fineManagement" class="nav-item "><i class="fas fa-hand-holding-usd"></i> Fine Administration</a>
+
+                                </nav>
+                            </aside>
 
     <!-- Main Content -->
     <main class="main-content">

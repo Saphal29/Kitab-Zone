@@ -192,14 +192,22 @@
             <p class="page-subtitle">Update user information and permissions</p>
         </div>
 
-        <form action="${pageContext.request.contextPath}/admin/updateUser" method="post">
+        <form action="${pageContext.request.contextPath}/admin/updateUser" method="post" enctype="multipart/form-data">
             <input type="hidden" name="userId" value="${user.userId}">
 
             <div class="form-group">
                 <label class="form-label">Profile Picture</label>
-                <img src="${user.profilePic != null ? user.profilePic : 'https://via.placeholder.com/100'}"
-                     alt="Profile Picture" class="profile-pic-preview">
-                <input type="file" id="profilePicUpload" style="display: none;">
+                <c:choose>
+                    <c:when test="${not empty user.profilePic}">
+                        <img src="${pageContext.request.contextPath}/uploads/${user.profilePic}"
+                             alt="Profile Picture" class="profile-pic-preview">
+                    </c:when>
+                    <c:otherwise>
+                        <img src="https://ui-avatars.com/api/?name=${user.fullName}&background=28a745&color=fff&size=150"
+                             alt="Profile Picture" class="profile-pic-preview">
+                    </c:otherwise>
+                </c:choose>
+                <input type="file" id="profilePicUpload" name="profilePic" accept="image/*" style="display: none;">
                 <button type="button" class="btn btn-secondary" onclick="document.getElementById('profilePicUpload').click()">
                     <i class="fas fa-upload"></i> Upload New Photo
                 </button>

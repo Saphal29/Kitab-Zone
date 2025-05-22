@@ -23,72 +23,61 @@
          --transition-speed: 0.3s;
        }
 
-       * {
-         margin: 0;
-         padding: 0;
-         box-sizing: border-box;
-         font-family: 'Segoe UI', Roboto, sans-serif;
-       }
 
-       body {
-         background: var(--background);
-         color: var(--text-primary);
-       }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
 
-       a {
-         text-decoration: none;
-         color: inherit;
-       }
+        body {
+            background: var(--secondary);
+            color: var(--text);
+        }
 
-       .app-container {
-         display: flex;
-         height: 100vh;
-         overflow: hidden;
-       }
+        .app-container {
+            display: grid;
+            grid-template-columns: 250px 1fr;
+            min-height: 100vh;
+        }
 
-       /* Sidebar */
-       .sidebar {
-         background: var(--card-bg);
-         border-right: 1px solid var(--border-color);
-         width: 250px;
-         padding: 2rem 1.5rem;
-         display: flex;
-         flex-direction: column;
-       }
+        .sidebar {
+            background: white;
+            padding: 20px;
+            box-shadow: var(--shadow);
+        }
 
-       .app-logo {
-         display: flex;
-         align-items: center;
-         font-size: 1.5rem;
-         font-weight: 600;
-         gap: 0.5rem;
-         margin-bottom: 2rem;
-         color: var(--text-primary);
-       }
+        .app-logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--primary);
+            margin-bottom: 30px;
+        }
 
-       .nav-item {
-         display: flex;
-         align-items: center;
-         gap: 0.75rem;
-         padding: 0.75rem 1rem;
-         font-size: 1rem;
-         border-radius: var(--radius);
-         transition: background var(--transition-speed);
-         margin-bottom: 0.5rem;
-       }
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 15px;
+            color: var(--text);
+            text-decoration: none;
+            border-radius: 8px;
+            margin-bottom: 5px;
+            transition: all 0.3s ease;
+        }
 
-       .nav-item i {
-         font-size: 1.25rem;
-       }
+        .nav-item:hover {
+            background: var(--primary-light);
+        }
 
-       .nav-item:hover {
-         background: var(--hover-bg);
-       }
-
-       .nav-item.active {
-         background: var(--primary);
-         color: #fff;
-       }
+        .nav-item.active {
+            background: var(--primary);
+            color: white;
+        }
 
        /* Main Content */
        .main-content {
@@ -264,168 +253,164 @@
                   box-shadow: var(--shadow);
                   padding: 2rem;
                   margin-top: 2rem;
+                  margin-bottom: 2rem;
+                  width: 100%;
+                  position: relative;
+                  z-index: 1;
               }
 
               .add-book-form.active {
-                  display: block;
+                  display: block !important;
               }
-              /* Form Section */
-                      .form-container {
-                        background: var(--card-bg);
-                        border-radius: var(--radius);
-                        box-shadow: var(--shadow);
-                        padding: 2rem;
-                        max-width: 800px;
-                        margin: 0 auto;
-                      }
 
-                      .form-group {
-                        margin-bottom: 1.5rem;
-                      }
+              .form-container {
+                background: var(--card-bg);
+                border-radius: var(--radius);
+                box-shadow: var(--shadow);
+                padding: 2rem;
+                max-width: 800px;
+                margin: 0 auto;
+              }
 
-                      .form-label {
-                        font-weight: 500;
-                        color: var(--text-primary);
-                        margin-bottom: 0.5rem;
-                        display: block;
-                      }
+              .form-group {
+                margin-bottom: 1.5rem;
+              }
 
-                      .form-input,
-                      .form-select,
-                      .form-textarea {
-                        border: 1px solid var(--border-color);
-                        border-radius: var(--radius);
-                        padding: 0.75rem;
-                        font-size: 1rem;
-                        width: 100%;
-                        outline: none;
-                        transition: border-color var(--transition-speed), box-shadow var(--transition-speed);
-                      }
+              .form-label {
+                font-weight: 500;
+                color: var(--text-primary);
+                margin-bottom: 0.5rem;
+                display: block;
+              }
 
-                      .form-input:focus,
-                      .form-select:focus,
-                      .form-textarea:focus {
-                        border-color: var(--primary);
-                        box-shadow: 0 0 4px rgba(76, 175, 80, 0.4);
-                      }
+              .form-input,
+              .form-select,
+              .form-textarea {
+                border: 1px solid var(--border-color);
+                border-radius: var(--radius);
+                padding: 0.75rem;
+                font-size: 1rem;
+                width: 100%;
+                outline: none;
+                transition: border-color var(--transition-speed), box-shadow var(--transition-speed);
+              }
 
-                      .form-textarea {
-                        resize: vertical;
-                        min-height: 120px;
-                      }
+              .form-input:focus,
+              .form-select:focus,
+              .form-textarea:focus {
+                border-color: var(--primary);
+                box-shadow: 0 0 4px rgba(76, 175, 80, 0.4);
+              }
 
-                      .form-actions {
-                        display: flex;
-                        justify-content: flex-end;
-                        gap: 1rem;
-                      }
+              .form-textarea {
+                resize: vertical;
+                min-height: 120px;
+              }
 
-                      .btn {
-                        padding: 0.75rem 1.5rem;
-                        font-size: 1rem;
-                        border: none;
-                        border-radius: var(--radius);
-                        cursor: pointer;
-                        transition: background var(--transition-speed);
-                      }
+              .form-actions {
+                display: flex !important;
+                justify-content: flex-end;
+                gap: 1rem;
+                margin-top: 2rem;
+                padding-top: 1rem;
+                border-top: 1px solid var(--border-color);
+                position: relative;
+                z-index: 2;
+              }
 
-                      .btn-primary {
-                        background: var(--primary);
-                        color: #fff;
-                      }
+              .btn {
+                display: inline-block !important;
+                padding: 0.75rem 1.5rem;
+                font-size: 1rem;
+                border: none;
+                border-radius: var(--radius);
+                cursor: pointer;
+                transition: background var(--transition-speed);
+                min-width: 120px;
+                position: relative;
+                z-index: 2;
+              }
 
-                      .btn-primary:hover {
-                        background: #43A047;
-                      }
+              .btn-primary {
+                background: var(--primary);
+                color: #fff;
+              }
 
-                      .btn-secondary {
-                        background: var(--hover-bg);
-                        color: var(--text-primary);
-                      }
+              .btn-primary:hover {
+                background: #43A047;
+              }
 
-                      .btn-secondary:hover {
-                        background: #E2E8F0;
-                      }
+              .btn-secondary {
+                background: var(--hover-bg);
+                color: var(--text-primary);
+              }
 
-                     .image-upload {
-                         position: relative;
-                         display: flex;
-                         flex-direction: column;
-                         align-items: center;
-                         justify-content: center;
-                         border: 2px dashed var(--border-color);
-                         border-radius: var(--radius);
-                         padding: 2rem;
-                         cursor: pointer;
-                         transition: all var(--transition-speed);
-                         text-align: center;
-                         min-height: 200px;
-                     }
+              .btn-secondary:hover {
+                background: #E2E8F0;
+              }
+
+             .image-upload {
+                 position: relative;
+                 display: flex;
+                 flex-direction: column;
+                 align-items: center;
+                 justify-content: center;
+                 border: 2px dashed var(--border-color);
+                 border-radius: var(--radius);
+                 padding: 2rem;
+                 cursor: pointer;
+                 transition: all var(--transition-speed);
+                 text-align: center;
+                 min-height: 200px;
+             }
 
 
-                     .image-upload:hover {
-                         border-color: var(--primary);
-                         background: rgba(76, 175, 80, 0.05);
-                     }
+             .image-upload:hover {
+                 border-color: var(--primary);
+                 background: rgba(76, 175, 80, 0.05);
+             }
 
-                      .image-upload i {
-                      font-size: 2.5rem;
-                      color: var(--primary);
-                      margin-bottom: 0.5rem;
-                      }
+              .image-upload i {
+              font-size: 2.5rem;
+              color: var(--primary);
+              margin-bottom: 0.5rem;
+              }
 
-                      .image-upload-text {
-                      color: var(--text-secondary);
-                      font-size: 0.875rem;
-                      margin-top: 0.5rem;
-                      }
+              .image-upload-text {
+              color: var(--text-secondary);
+              font-size: 0.875rem;
+              margin-top: 0.5rem;
+              }
 
-                      .preview-image {
-                          max-width: 100%;
-                          max-height: 200px;
-                          object-fit: contain;
-                          border-radius: 4px;
-                          margin-top: 1rem;
-                      }
+              .preview-image {
+                  max-width: 100%;
+                  max-height: 200px;
+                  object-fit: contain;
+                  border-radius: 4px;
+                  margin-top: 1rem;
+              }
 
-                      #uploadText, #imageUpload i {
-                          transition: all 0.3s ease;
-                      }
-                       .edit-book-form {
-                                 display: none;
-                                 background: var(--card-bg);
-                                 border-radius: var(--radius);
-                                 box-shadow: var(--shadow);
-                                 padding: 2rem;
-                                 margin-top: 2rem;
-                             }
-
-                             .edit-book-form.active {
-                                 display: block;
-                             }
-
-                             .action-buttons {
-                                 display: flex;
-                                 gap: 0.5rem;
-                             }
+              #uploadText, #imageUpload i {
+                  transition: all 0.3s ease;
+              }
     </style>
 </head>
 <body>
     <div class="app-container">
-       <aside class="sidebar">
-         <div class="app-logo">
-           <i class="fas fa-book"></i> KitabZone
-         </div>
-         <nav>
-           <a href="${pageContext.request.contextPath}/admin/adminDashboard" class="nav-item"><i class="fas fa-th-large"></i> Dashboard</a>
-           <a href="${pageContext.request.contextPath}/admin/member" class="nav-item"><i class="fas fa-users"></i> Member</a>
+        <aside class="sidebar">
+                  <div class="app-logo">
+                      <i class="fas fa-book"></i> KitabZone
+                  </div>
+                  <nav>
+                      <a href="${pageContext.request.contextPath}/admin/adminDashboard" class="nav-item "><i class="fas fa-th-large"></i> Dashboard</a>
+                      <a href="${pageContext.request.contextPath}/admin/member" class="nav-item"><i class="fas fa-users"></i> Member</a>
+                      <a href="${pageContext.request.contextPath}/admin/books" class="nav-item active"><i class="fas fa-list"></i> Book</a>
+                      <a href="${pageContext.request.contextPath}/admin/transactionControl" class="nav-item"><i class="fas fa-tasks"></i> Transaction Control</a>
+                      <a href="${pageContext.request.contextPath}/admin/reservationManagement" class="nav-item"><i class="fas fa-calendar-check"></i> Reservation Management</a>
+                      <a href="${pageContext.request.contextPath}/admin/fineManagement" class="nav-item"><i class="fas fa-hand-holding-usd"></i> Fine Administration</a>
 
-           <a href="${pageContext.request.contextPath}/admin/books" class="nav-item active"><i class="fas fa-list"></i> Book</a>
-           <a href="${pageContext.request.contextPath}/admin/transactionControl" class="nav-item"><i class="fas fa-tasks"></i> Transaction Control</a>
-           <a href="${pageContext.request.contextPath}/admin/reservationManagement" class="nav-item"><i class="fas fa-calendar-check"></i> Reservation Management</a>
-           <a href="${pageContext.request.contextPath}/admin/fineManagement" class="nav-item"><i class="fas fa-hand-holding-usd"></i> Fine Administration</a>
-         </nav>
-       </aside>
+                  </nav>
+              </aside>
 
        <main class="main-content">
                    <div class="header">
@@ -534,104 +519,6 @@
                                   </form>
                               </div>
 
-                   <!-- Edit Book Form -->
-                   <div id="editBookForm" class="edit-book-form ${not empty bookToEdit ? 'active' : ''}">
-                       <c:if test="${not empty bookToEdit}">
-                           <form action="${pageContext.request.contextPath}/admin/updateBook"
-                                 method="POST" enctype="multipart/form-data">
-                               <input type="hidden" name="bookId" value="${bookToEdit.bookId}">
-
-                               <!-- Title -->
-                               <div class="form-group">
-                                   <label class="form-label">Title *</label>
-                                   <input type="text" name="title" value="${fn:escapeXml(bookToEdit.title)}"
-                                          class="form-input" required>
-                               </div>
-
-                               <!-- Author -->
-                               <div class="form-group">
-                                   <label class="form-label">Author *</label>
-                                   <input type="text" name="author" value="${fn:escapeXml(bookToEdit.author)}"
-                                          class="form-input" required>
-                               </div>
-
-                               <!-- Publisher -->
-                               <div class="form-group">
-                                   <label class="form-label">Publisher</label>
-                                   <input type="text" name="publisher" value="${fn:escapeXml(bookToEdit.publisher)}"
-                                          class="form-input">
-                               </div>
-
-                               <!-- Edition -->
-                               <div class="form-group">
-                                   <label class="form-label">Edition</label>
-                                   <input type="text" name="edition" value="${fn:escapeXml(bookToEdit.edition)}"
-                                          class="form-input">
-                               </div>
-
-                               <!-- ISBN -->
-                               <div class="form-group">
-                                   <label class="form-label">ISBN *</label>
-                                   <input type="text" name="isbn" value="${fn:escapeXml(bookToEdit.isbn)}"
-                                          class="form-input" required>
-                               </div>
-
-                               <!-- Genre -->
-                               <div class="form-group">
-                                   <label class="form-label">Genre *</label>
-                                   <select name="genre" class="form-select" required>
-                                       <option value="">Select Genre</option>
-                                       <c:forEach items="${genres}" var="genre">
-                                           <option value="${genre}"
-                                               ${bookToEdit.genre eq genre ? 'selected' : ''}>
-                                               ${fn:escapeXml(genre)}
-                                           </option>
-                                       </c:forEach>
-                                   </select>
-                               </div>
-
-                               <!-- Copies -->
-                               <div class="form-group">
-                                   <label class="form-label">Number of Copies *</label>
-                                   <input type="number" name="copies" value="${fn:escapeXml(bookToEdit.totalCopies)}"
-                                          min="1" class="form-input" required>
-                               </div>
-
-                               <!-- Cover Image -->
-                             <!-- Cover Image -->
-                             <div class="form-group">
-                                 <label class="form-label">Cover Image</label>
-                                 <div class="image-upload" id="editImageUpload" onclick="document.getElementById('editCoverImageInput').click()">
-                                     <input type="file" name="coverImage"
-                                            id="editCoverImageInput"
-                                            accept="image/*"
-                                            hidden
-                                            onchange="previewEditImage(event)">
-
-                                     <i class="fas fa-cloud-upload-alt"></i>
-
-                                     <p class="image-upload-text" id="editUploadText"
-                                        style="<c:if test='${not empty bookToEdit.coverImage}'>display: none;</c:if>">
-                                        Drag and drop or click to upload
-                                     </p>
-
-                                     <img src="<c:out value='${not empty bookToEdit.coverImage ? pageContext.request.contextPath + "/uploads/" + bookToEdit.coverImage : ""}'/>"
-                                          alt="Preview"
-                                          id="editImagePreview"
-                                          class="preview-image"
-                                          style="<c:if test='${empty bookToEdit.coverImage}'>display: none;</c:if>">
-                                 </div>
-                             </div>
-
-                               <!-- Form Actions -->
-                               <div class="form-actions">
-                                   <button type="button" id="cancelEditBook" class="btn btn-secondary">Cancel</button>
-                                   <button type="submit" class="btn btn-primary">Update Book</button>
-                               </div>
-                           </form>
-                       </c:if>
-                   </div>
-
                    <!-- Books Table -->
                    <div class="table-container">
                        <table>
@@ -703,58 +590,35 @@
                         document.getElementById('addBookForm').classList.remove('active');
                     });
 
-                    // Cancel edit book form
-                    document.getElementById('cancelEditBook').addEventListener('click', function() {
-                        window.location.href = "${pageContext.request.contextPath}/admin/books";
-                    });
+                    //for add book
+                     function previewImage(event) {
+                         const file = event.target.files[0];
+                         const preview = document.getElementById('imagePreview');
+                         const uploadText = document.getElementById('uploadText');
 
+                         if (file && file.type.startsWith('image/')) {
+                             const reader = new FileReader();
+                             reader.onload = function(e) {
+                                 preview.src = e.target.result;
+                                 preview.style.display = 'block';
+                                 uploadText.style.display = 'none';
+                             };
+                             reader.readAsDataURL(file);
+                         }
+                     }
 
+                  // Search functionality
+                  document.getElementById('searchInput').addEventListener('input', function(e) {
+                      const searchTerm = e.target.value.toLowerCase();
+                      const rows = document.querySelectorAll('.table-container tbody tr');
 
-              //for add book
-               function previewImage(event) {
-                   const file = event.target.files[0];
-                   const preview = document.getElementById('imagePreview');
-                   const uploadText = document.getElementById('uploadText');
+                      rows.forEach(row => {
+                          if (row.querySelector('td[colspan]')) return;
 
-                   if (file && file.type.startsWith('image/')) {
-                       const reader = new FileReader();
-                       reader.onload = function(e) {
-                           preview.src = e.target.result;
-                           preview.style.display = 'block';
-                           uploadText.style.display = 'none';
-                       };
-                       reader.readAsDataURL(file);
-                   }
-               }
-               //for edit book form
-              function previewEditImage(event) {
-                  const file = event.target.files[0];
-                  const preview = document.getElementById('editImagePreview');
-                  const uploadText = document.getElementById('editUploadText');
-
-                  if (file && file.type.startsWith('image/')) {
-                      const reader = new FileReader();
-                      reader.onload = function(e) {
-                          preview.src = e.target.result;
-                          preview.style.display = 'block';
-                          uploadText.style.display = 'none';
-                      };
-                      reader.readAsDataURL(file);
-                  }
-              }
-
-                // Search functionality
-                document.getElementById('searchInput').addEventListener('input', function(e) {
-                    const searchTerm = e.target.value.toLowerCase();
-                    const rows = document.querySelectorAll('.table-container tbody tr');
-
-                    rows.forEach(row => {
-                        if (row.querySelector('td[colspan]')) return;
-
-                        const text = row.textContent.toLowerCase();
-                        row.style.display = text.includes(searchTerm) ? '' : 'none';
-                    });
-                });
+                          const text = row.textContent.toLowerCase();
+                          row.style.display = text.includes(searchTerm) ? '' : 'none';
+                      });
+                  });
 
                 </script>
 </body>

@@ -22,6 +22,7 @@
             --shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
 
+
         * {
             margin: 0;
             padding: 0;
@@ -40,7 +41,6 @@
             min-height: 100vh;
         }
 
-        /* Sidebar Styles */
         .sidebar {
             background: white;
             padding: 20px;
@@ -78,14 +78,6 @@
             color: white;
         }
 
-        .nav-item i {
-            color: var(--primary);
-            transition: color 0.3s ease;
-        }
-
-        .nav-item.active i {
-            color: white;
-        }
 
         /* Main Content Styles */
         .main-content {
@@ -315,19 +307,20 @@
 <body>
     <div class="app-container">
         <!-- Sidebar -->
-        <aside class="sidebar">
-            <div class="app-logo">
-                <i class="fas fa-book"></i> KitabZone
-            </div>
-            <nav>
-                <a href="${pageContext.request.contextPath}/admin/adminDashboard" class="nav-item"><i class="fas fa-th-large"></i> Dashboard</a>
-                <a href="${pageContext.request.contextPath}/admin/member" class="nav-item"><i class="fas fa-users"></i> Member</a>
-                <a href="${pageContext.request.contextPath}/admin/books" class="nav-item"><i class="fas fa-list"></i> Book</a>
-                <a href="${pageContext.request.contextPath}/admin/transactionControl" class="nav-item"><i class="fas fa-tasks"></i> Transaction Control</a>
-                <a href="${pageContext.request.contextPath}/admin/reservationManagement" class="nav-item active"><i class="fas fa-calendar-check"></i> Reservation Management</a>
-                <a href="${pageContext.request.contextPath}/admin/fineManagement" class="nav-item"><i class="fas fa-hand-holding-usd"></i> Fine Administration</a>
-            </nav>
-        </aside>
+       <aside class="sidebar">
+                             <div class="app-logo">
+                                 <i class="fas fa-book"></i> KitabZone
+                             </div>
+                             <nav>
+                                 <a href="${pageContext.request.contextPath}/admin/adminDashboard" class="nav-item "><i class="fas fa-th-large"></i> Dashboard</a>
+                                 <a href="${pageContext.request.contextPath}/admin/member" class="nav-item"><i class="fas fa-users"></i> Member</a>
+                                 <a href="${pageContext.request.contextPath}/admin/books" class="nav-item"><i class="fas fa-list"></i> Book</a>
+                                 <a href="${pageContext.request.contextPath}/admin/transactionControl" class="nav-item"><i class="fas fa-tasks"></i> Transaction Control</a>
+                                 <a href="${pageContext.request.contextPath}/admin/reservationManagement" class="nav-item active"><i class="fas fa-calendar-check"></i> Reservation Management</a>
+                                 <a href="${pageContext.request.contextPath}/admin/fineManagement" class="nav-item "><i class="fas fa-hand-holding-usd"></i> Fine Administration</a>
+
+                             </nav>
+                         </aside>
 
         <!-- Main Content -->
         <main class="main-content">
